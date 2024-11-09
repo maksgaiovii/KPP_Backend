@@ -17,4 +17,9 @@ public record PizzaPreparationStep(PizzaState nextState,
         }
         return nextState;
     }
+    
+    @Override
+    public PizzaState getNextState() {
+        return nextState;
+    }
 }

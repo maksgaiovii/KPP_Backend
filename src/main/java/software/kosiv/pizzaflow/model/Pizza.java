@@ -15,12 +15,17 @@ public class Pizza extends Dish {
     }
     
     @Override
-    public PizzaState nextState() {
-        state = preparationStrategy.nextState();
+    public PizzaState toNextState() {
+        state = preparationStrategy.toNextState();
         if (state == PizzaState.COMPLETED) {
             isCompleted = true;
         }
         return state;
+    }
+    
+    @Override
+    public DishState getNextState() {
+        return preparationStrategy.getNextState();
     }
     
     @Override
@@ -58,10 +63,18 @@ public class Pizza extends Dish {
         }
         
         @Override
-        public PizzaState nextState() {
+        public PizzaState toNextState() {
             var nextStep = preparationSteps.poll();
             return nextStep != null
                            ? nextStep.execute()
+                           : PizzaState.COMPLETED;
+        }
+        
+        @Override
+        public PizzaState getNextState() {
+            var nextStep = preparationSteps.peek();
+            return nextStep != null
+                           ? nextStep.getNextState()
                            : PizzaState.COMPLETED;
         }
     }

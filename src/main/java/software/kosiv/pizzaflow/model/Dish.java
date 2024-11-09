@@ -14,7 +14,9 @@ public abstract class Dish {
         return id;
     }
     
-    public abstract DishState nextState();
+    public abstract DishState getNextState();
+    
+    public abstract DishState toNextState();
     
     public abstract DishState getState();
     
