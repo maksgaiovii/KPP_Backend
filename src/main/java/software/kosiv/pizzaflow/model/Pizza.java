@@ -35,11 +35,11 @@ public class Pizza extends Dish {
     
     public enum PizzaState implements DishState {
         INITIAL("initial"),
-        DOUGH_PREPARATION("dough preparation"),
-        DOUGH_ROLLING("dough rolling"),
-        SAUCE_ADDITION("sauce addition"),
-        TOPPING_ADDITION("topping addition"),
-        BAKING("baking"),
+        DOUGH_PREPARED("dough preparation"),
+        DOUGH_ROLLED("dough rolling"),
+        SAUCE_ADDED("sauce addition"),
+        TOPPING_ADDED("topping addition"),
+        BAKED("baking"),
         FINISHING_TOUCHES("finishing touches"),
         COMPLETED("completed");
         

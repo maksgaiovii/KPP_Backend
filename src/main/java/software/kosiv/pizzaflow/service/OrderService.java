@@ -2,7 +2,6 @@ package software.kosiv.pizzaflow.service;
 
 import software.kosiv.pizzaflow.model.MenuItem;
 import software.kosiv.pizzaflow.model.Order;
-import software.kosiv.pizzaflow.model.OrderItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,9 +25,7 @@ public class OrderService {
     }
     
     public void processOrder(Order order) {
-        for (OrderItem orderItem : order.getOrderItems()) {
-            cookService.acceptOrderItem(orderItem);
-        }
+        cookService.acceptOrder(order);
     }
     
     public List<Order> getOrders() {

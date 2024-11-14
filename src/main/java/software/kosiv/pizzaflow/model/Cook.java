@@ -22,6 +22,12 @@ public class Cook {
         return dish.toNextState();
     }
     
+    public DishState completeDish(Dish dish) { // todo: rename this method
+        while (!dish.isCompleted()) {
+            prepareDish(dish);
+        }
+        return dish.getState();
+    }
     
     @Override
     public boolean equals(Object o) {
@@ -50,7 +56,7 @@ public class Cook {
             throw new BusyCookException("Cook is already busy");
         }
         var prevStatus = getStatus();
-        this.status = CookStatus.PAUSED;
+        this.status = CookStatus.BUSY;
         return prevStatus;
     }
     
