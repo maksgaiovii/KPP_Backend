@@ -8,8 +8,8 @@ public class Pizza extends Dish {
     private final PizzaPreparationStrategy preparationStrategy;
     private PizzaState state;
     
-    public Pizza(List<PizzaPreparationStep> steps) {
-        super();
+    public Pizza(OrderItem  orderItem,List<PizzaPreparationStep> steps) {
+        super(orderItem);
         this.state = PizzaState.INITIAL;
         this.preparationStrategy = new PizzaPreparationStrategy(steps);
     }
@@ -18,7 +18,7 @@ public class Pizza extends Dish {
     public PizzaState toNextState() {
         state = preparationStrategy.toNextState();
         if (state == PizzaState.COMPLETED) {
-            isCompleted = true;
+            complete();
         }
         return state;
     }
@@ -31,6 +31,11 @@ public class Pizza extends Dish {
     @Override
     public PizzaState getState() {
         return state;
+    }
+    
+    private void complete(){
+        getOrderItem().complete();
+        isCompleted = true;
     }
     
     public enum PizzaState implements DishState {

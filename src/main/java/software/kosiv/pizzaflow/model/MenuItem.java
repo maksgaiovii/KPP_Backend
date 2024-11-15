@@ -20,7 +20,7 @@ public abstract class MenuItem {
         return ingredients;
     }
     
-    public abstract Dish createDish();
+    public abstract Dish createDish(OrderItem orderItem);
     
     @Override
     public boolean equals(Object o) {

@@ -39,7 +39,7 @@ public class CookService {
     
     private void assignOrderItemToCook(Cook cook, OrderItem orderItem) {
         cook.setBusy();
-        Dish dish = orderItem.getMenuItem().createDish();
+        Dish dish = orderItem.getDish();
         while (!dish.isCompleted()){
             publishDishPreparationStartEvent(cook, dish);
             var dishState = cook.completeDish(dish); // todo: send every dish status, not only completed

@@ -14,7 +14,7 @@ public class PizzaMenuItem extends MenuItem {
     }
     
     @Override
-    public Pizza createDish() {
-        return new Pizza(steps);
+    public Pizza createDish(OrderItem orderItem) {
+        return new Pizza(orderItem ,steps);
     }
 }

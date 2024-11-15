@@ -10,17 +10,27 @@ public class Order {
     private final LocalDateTime createdAt = LocalDateTime.now();
     private LocalDateTime completedAt;
     private final List<OrderItem> orderItems;
+    private final List<OrderItem> uncompletedOrderItems;
     
-    public Order() {
-        orderItems = new ArrayList<>();
+    public Order(List<MenuItem> menuItems) {
+        this.orderItems = menuItems.stream()
+                                              .map(m -> new OrderItem(this, m))
+                                              .toList();
+        this.uncompletedOrderItems = new ArrayList<>(this.orderItems);
     }
     
-    public void addOrderItem(MenuItem menuItem) {
-        orderItems.add(new OrderItem(this, menuItem));
+    protected void completeOrderItem(OrderItem orderItem) {
+        if (!orderItems.contains(orderItem)) {
+            throw new IllegalArgumentException();
+        }
+        uncompletedOrderItems.remove(orderItem);
+        if (uncompletedOrderItems.isEmpty()){
+            completeOrder();
+        }
     }
     
-    public Order(List<OrderItem> orderItems) {
-        this.orderItems = orderItems;
+    private void completeOrder() {
+        setCompletedAt(LocalDateTime.now());
     }
     
     public UUID getId() {
@@ -39,7 +49,9 @@ public class Order {
         return completedAt;
     }
     
-    public void setCompletedAt(LocalDateTime completedAt) {
+    private void setCompletedAt(LocalDateTime completedAt) {
         this.completedAt = completedAt;
     }
+    
+    
 }

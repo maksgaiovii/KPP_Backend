@@ -30,11 +30,4 @@ public class DishPreparationStartedEvent extends ApplicationEvent {
     public Cook getCook() {
         return cook;
     }
-    
-    @Override
-    public String toString() {
-        return "dish=" + dish +
-                       ", nextDishState=" + nextDishState +
-                       ", cook=" + cook.getName();
-    }
 }
