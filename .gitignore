@@ -31,3 +31,4 @@ build/
 
 ### VS Code ###
 .vscode/
+/src/main/java/software/kosiv/pizzaflow/runnable/

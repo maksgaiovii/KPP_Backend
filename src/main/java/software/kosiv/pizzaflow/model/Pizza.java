@@ -8,19 +8,24 @@ public class Pizza extends Dish {
     private final PizzaPreparationStrategy preparationStrategy;
     private PizzaState state;
     
-    public Pizza(List<PizzaPreparationStep> steps) {
-        super();
+    public Pizza(OrderItem  orderItem,List<PizzaPreparationStep> steps) {
+        super(orderItem);
         this.state = PizzaState.INITIAL;
         this.preparationStrategy = new PizzaPreparationStrategy(steps);
     }
     
     @Override
-    public PizzaState nextState() {
-        state = preparationStrategy.nextState();
+    public PizzaState toNextState() {
+        state = preparationStrategy.toNextState();
         if (state == PizzaState.COMPLETED) {
-            isCompleted = true;
+            complete();
         }
         return state;
+    }
+    
+    @Override
+    public DishState getNextState() {
+        return preparationStrategy.getNextState();
     }
     
     @Override
@@ -28,13 +33,18 @@ public class Pizza extends Dish {
         return state;
     }
     
+    private void complete(){
+        getOrderItem().complete();
+        isCompleted = true;
+    }
+    
     public enum PizzaState implements DishState {
         INITIAL("initial"),
-        DOUGH_PREPARATION("dough preparation"),
-        DOUGH_ROLLING("dough rolling"),
-        SAUCE_ADDITION("sauce addition"),
-        TOPPING_ADDITION("topping addition"),
-        BAKING("baking"),
+        DOUGH_PREPARED("dough preparation"),
+        DOUGH_ROLLED("dough rolling"),
+        SAUCE_ADDED("sauce addition"),
+        TOPPING_ADDED("topping addition"),
+        BAKED("baking"),
         FINISHING_TOUCHES("finishing touches"),
         COMPLETED("completed");
         
@@ -58,10 +68,18 @@ public class Pizza extends Dish {
         }
         
         @Override
-        public PizzaState nextState() {
+        public PizzaState toNextState() {
             var nextStep = preparationSteps.poll();
             return nextStep != null
                            ? nextStep.execute()
+                           : PizzaState.COMPLETED;
+        }
+        
+        @Override
+        public PizzaState getNextState() {
+            var nextStep = preparationSteps.peek();
+            return nextStep != null
+                           ? nextStep.getNextState()
                            : PizzaState.COMPLETED;
         }
     }

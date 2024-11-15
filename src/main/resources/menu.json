@@ -1,0 +1,145 @@
+[
+  {
+    "name": "Margherita",
+    "ingredients": ["tomato", "mozzarella", "basil"],
+    "steps": [
+      {"nextState": "DOUGH_PREPARED", "executionTimeInSeconds": 10},
+      {"nextState": "DOUGH_ROLLED", "executionTimeInSeconds": 8},
+      {"nextState": "SAUCE_ADDED", "executionTimeInSeconds": 5},
+      {"nextState": "TOPPING_ADDED", "executionTimeInSeconds": 7},
+      {"nextState": "BAKED", "executionTimeInSeconds": 15},
+      {"nextState": "FINISHING_TOUCHES", "executionTimeInSeconds": 5},
+      {"nextState": "COMPLETED", "executionTimeInSeconds": 5}
+    ]
+  },
+  {
+    "name": "Pepperoni",
+    "ingredients": ["tomato sauce", "mozzarella", "pepperoni"],
+    "steps": [
+      {"nextState": "DOUGH_PREPARED", "executionTimeInSeconds": 12},
+      {"nextState": "DOUGH_ROLLED", "executionTimeInSeconds": 8},
+      {"nextState": "SAUCE_ADDED", "executionTimeInSeconds": 5},
+      {"nextState": "TOPPING_ADDED", "executionTimeInSeconds": 7},
+      {"nextState": "BAKED", "executionTimeInSeconds": 20},
+      {"nextState": "FINISHING_TOUCHES", "executionTimeInSeconds": 6},
+      {"nextState": "COMPLETED", "executionTimeInSeconds": 5}
+    ]
+  },
+  {
+    "name": "BBQ Chicken",
+    "ingredients": ["BBQ sauce", "mozzarella", "chicken", "onions"],
+    "steps": [
+      {"nextState": "DOUGH_PREPARED", "executionTimeInSeconds": 15},
+      {"nextState": "DOUGH_ROLLED", "executionTimeInSeconds": 10},
+      {"nextState": "SAUCE_ADDED", "executionTimeInSeconds": 7},
+      {"nextState": "TOPPING_ADDED", "executionTimeInSeconds": 10},
+      {"nextState": "BAKED", "executionTimeInSeconds": 18},
+      {"nextState": "FINISHING_TOUCHES", "executionTimeInSeconds": 6},
+      {"nextState": "COMPLETED", "executionTimeInSeconds": 5}
+    ]
+  },
+  {
+    "name": "Hawaiian",
+    "ingredients": ["tomato sauce", "mozzarella", "ham", "pineapple"],
+    "steps": [
+      {"nextState": "DOUGH_PREPARED", "executionTimeInSeconds": 12},
+      {"nextState": "DOUGH_ROLLED", "executionTimeInSeconds": 10},
+      {"nextState": "SAUCE_ADDED", "executionTimeInSeconds": 5},
+      {"nextState": "TOPPING_ADDED", "executionTimeInSeconds": 7},
+      {"nextState": "BAKED", "executionTimeInSeconds": 17},
+      {"nextState": "FINISHING_TOUCHES", "executionTimeInSeconds": 5},
+      {"nextState": "COMPLETED", "executionTimeInSeconds": 5}
+    ]
+  },
+  {
+    "name": "Veggie",
+    "ingredients": ["tomato sauce", "mozzarella", "bell peppers", "onions", "olives"],
+    "steps": [
+      {"nextState": "DOUGH_PREPARED", "executionTimeInSeconds": 10},
+      {"nextState": "DOUGH_ROLLED", "executionTimeInSeconds": 8},
+      {"nextState": "SAUCE_ADDED", "executionTimeInSeconds": 6},
+      {"nextState": "TOPPING_ADDED", "executionTimeInSeconds": 9},
+      {"nextState": "BAKED", "executionTimeInSeconds": 16},
+      {"nextState": "FINISHING_TOUCHES", "executionTimeInSeconds": 5},
+      {"nextState": "COMPLETED", "executionTimeInSeconds": 5}
+    ]
+  },
+  {
+    "name": "Four Cheese",
+    "ingredients": ["mozzarella", "parmesan", "gorgonzola", "fontina"],
+    "steps": [
+      {"nextState": "DOUGH_PREPARED", "executionTimeInSeconds": 14},
+      {"nextState": "DOUGH_ROLLED", "executionTimeInSeconds": 10},
+      {"nextState": "SAUCE_ADDED", "executionTimeInSeconds": 7},
+      {"nextState": "TOPPING_ADDED", "executionTimeInSeconds": 12},
+      {"nextState": "BAKED", "executionTimeInSeconds": 20},
+      {"nextState": "FINISHING_TOUCHES", "executionTimeInSeconds": 6},
+      {"nextState": "COMPLETED", "executionTimeInSeconds": 5}
+    ]
+  },
+  {
+    "name": "Meat Lovers",
+    "ingredients": ["tomato sauce", "mozzarella", "pepperoni", "sausage", "bacon"],
+    "steps": [
+      {"nextState": "DOUGH_PREPARED", "executionTimeInSeconds": 13},
+      {"nextState": "DOUGH_ROLLED", "executionTimeInSeconds": 9},
+      {"nextState": "SAUCE_ADDED", "executionTimeInSeconds": 5},
+      {"nextState": "TOPPING_ADDED", "executionTimeInSeconds": 10},
+      {"nextState": "BAKED", "executionTimeInSeconds": 20},
+      {"nextState": "FINISHING_TOUCHES", "executionTimeInSeconds": 6},
+      {"nextState": "COMPLETED", "executionTimeInSeconds": 5}
+    ]
+  },
+  {
+    "name": "Spinach & Feta",
+    "ingredients": ["tomato sauce", "mozzarella", "spinach", "feta"],
+    "steps": [
+      {"nextState": "DOUGH_PREPARED", "executionTimeInSeconds": 11},
+      {"nextState": "DOUGH_ROLLED", "executionTimeInSeconds": 9},
+      {"nextState": "SAUCE_ADDED", "executionTimeInSeconds": 6},
+      {"nextState": "TOPPING_ADDED", "executionTimeInSeconds": 8},
+      {"nextState": "BAKED", "executionTimeInSeconds": 16},
+      {"nextState": "FINISHING_TOUCHES", "executionTimeInSeconds": 5},
+      {"nextState": "COMPLETED", "executionTimeInSeconds": 5}
+    ]
+  },
+  {
+    "name": "Buffalo Chicken",
+    "ingredients": ["buffalo sauce", "mozzarella", "chicken", "onions"],
+    "steps": [
+      {"nextState": "DOUGH_PREPARED", "executionTimeInSeconds": 14},
+      {"nextState": "DOUGH_ROLLED", "executionTimeInSeconds": 10},
+      {"nextState": "SAUCE_ADDED", "executionTimeInSeconds": 8},
+      {"nextState": "TOPPING_ADDED", "executionTimeInSeconds": 11},
+      {"nextState": "BAKED", "executionTimeInSeconds": 18},
+      {"nextState": "FINISHING_TOUCHES", "executionTimeInSeconds": 6},
+      {"nextState": "COMPLETED", "executionTimeInSeconds": 5}
+    ]
+  },
+  {
+    "name": "Mushroom Delight",
+    "ingredients": ["tomato sauce", "mozzarella", "mushrooms"],
+    "steps": [
+      {"nextState": "DOUGH_PREPARED", "executionTimeInSeconds": 10},
+      {"nextState": "DOUGH_ROLLED", "executionTimeInSeconds": 8},
+      {"nextState": "SAUCE_ADDED", "executionTimeInSeconds": 5},
+      {"nextState": "TOPPING_ADDED", "executionTimeInSeconds": 7},
+      {"nextState": "BAKED", "executionTimeInSeconds": 15},
+      {"nextState": "FINISHING_TOUCHES", "executionTimeInSeconds": 5},
+      {"nextState": "COMPLETED", "executionTimeInSeconds": 5}
+    ]
+  },
+  {
+    "name": "Pesto",
+    "ingredients": ["pesto sauce", "mozzarella", "cherry tomatoes"],
+    "steps": [
+      {"nextState": "DOUGH_PREPARED", "executionTimeInSeconds": 12},
+      {"nextState": "DOUGH_ROLLED", "executionTimeInSeconds": 8},
+      {"nextState": "SAUCE_ADDED", "executionTimeInSeconds": 6},
+      {"nextState": "TOPPING_ADDED", "executionTimeInSeconds": 8},
+      {"nextState": "BAKED", "executionTimeInSeconds": 17},
+      {"nextState": "FINISHING_TOUCHES", "executionTimeInSeconds": 5},
+      {"nextState": "COMPLETED", "executionTimeInSeconds": 5}
+    ]
+  }
+]

@@ -1,7 +1,10 @@
 package software.kosiv.pizzaflow.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import java.util.List;
 
+@JsonDeserialize(using = PizzaMenuItemDeserializer.class)
 public class PizzaMenuItem extends MenuItem {
     private final List<PizzaPreparationStep> steps;
     
@@ -11,7 +14,7 @@ public class PizzaMenuItem extends MenuItem {
     }
     
     @Override
-    public Pizza createDish() {
-        return new Pizza(steps);
+    public Pizza createDish(OrderItem orderItem) {
+        return new Pizza(orderItem ,steps);
     }
 }

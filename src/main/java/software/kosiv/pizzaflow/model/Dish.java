@@ -3,18 +3,26 @@ package software.kosiv.pizzaflow.model;
 import java.util.UUID;
 
 public abstract class Dish {
-    private final UUID id;
+    private final UUID uuid;
+    private final OrderItem orderItem;
     protected boolean isCompleted;
     
-    public Dish(){
-        this.id = UUID.randomUUID();
+    public Dish(OrderItem orderItem){
+        this.orderItem = orderItem;
+        this.uuid = orderItem.getId();
     }
     
-    public UUID getId() {
-        return id;
+    public abstract DishState toNextState();
+    
+    public UUID getUuid() {
+        return uuid;
     }
     
-    public abstract DishState nextState();
+    public OrderItem getOrderItem() {
+        return orderItem;
+    }
+    
+    public abstract DishState getNextState();
     
     public abstract DishState getState();
     
