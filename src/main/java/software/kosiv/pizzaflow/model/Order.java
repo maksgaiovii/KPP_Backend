@@ -8,14 +8,18 @@ import java.util.UUID;
 public class Order {
     private final UUID id = UUID.randomUUID();
     private final LocalDateTime createdAt = LocalDateTime.now();
-    private LocalDateTime completedAt;
     private final List<OrderItem> orderItems;
     private final List<OrderItem> uncompletedOrderItems;
+    private final Customer customer;
+    private CashRegister cashRegister;
+    private LocalDateTime completedAt;
     
-    public Order(List<MenuItem> menuItems) {
+    public Order(List<MenuItem> menuItems, Customer customer) {
         this.orderItems = menuItems.stream()
                                               .map(m -> new OrderItem(this, m))
                                               .toList();
+        this.customer = customer;
+        customer.setOrder(this);
         this.uncompletedOrderItems = new ArrayList<>(this.orderItems);
     }
     
@@ -31,6 +35,21 @@ public class Order {
     
     private void completeOrder() {
         setCompletedAt(LocalDateTime.now());
+    }
+    
+    public Customer getCustomer() {
+        return customer;
+    }
+    
+    public CashRegister getCashRegister() {
+        return cashRegister;
+    }
+    
+    public void setCashRegister(CashRegister cashRegister) {
+        if(this.cashRegister != null) {
+            throw new IllegalStateException(); // fixme: change exception class
+        }
+        this.cashRegister = cashRegister;
     }
     
     public UUID getId() {

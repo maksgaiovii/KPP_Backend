@@ -42,7 +42,7 @@ public class CookService {
         Dish dish = orderItem.getDish();
         while (!dish.isCompleted()){
             publishDishPreparationStartEvent(cook, dish);
-            var dishState = cook.completeDish(dish); // todo: send every dish status, not only completed
+            var dishState = cook.prepareDish(dish); // todo: send every dish status, not only completed
             publishDishPreparationCompletedEvent(cook, dish, dishState);
             
         }
@@ -50,9 +50,10 @@ public class CookService {
     }
     
     private void completeOrderItem(Cook cook, OrderItem orderItem) {
-        logger.info("Cook {} start cooking order item {} from order {}",
+        logger.info("Cook {} start cooking order item {} with id {} from order {}",
                     cook.getName(),
                     orderItem.getMenuItem().getName(),
+                    orderItem.getId(),
                     orderItem.getOrder().getId());
         executorService.execute(() -> assignOrderItemToCook(cook, orderItem));
     }

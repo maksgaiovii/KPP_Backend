@@ -30,4 +30,13 @@ public class DishPreparationStartedEvent extends ApplicationEvent {
     public Cook getCook() {
         return cook;
     }
+    
+    @Override
+    public String toString() {
+        return "DishPreparationStartedEvent{" +
+                       "dish=" + dish.getUuid() +
+                       ", nextDishState=" + nextDishState +
+                       ", cook=" + cook.getName() +
+                       '}';
+    }
 }

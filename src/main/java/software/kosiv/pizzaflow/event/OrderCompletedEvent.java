@@ -14,4 +14,11 @@ public class OrderCompletedEvent extends ApplicationEvent {
     public Order getOrder() {
         return order;
     }
+    
+    @Override
+    public String toString() {
+        return "OrderCompletedEvent{" +
+                       "order=" + order.getId() +
+                       '}';
+    }
 }

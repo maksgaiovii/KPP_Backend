@@ -1,5 +1,6 @@
 package software.kosiv.pizzaflow.model;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class Customer {
@@ -30,5 +31,18 @@ public class Customer {
     
     public void setOrder(Order order) {
         this.order = order;
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Customer customer)) {
+            return false;
+        }
+        return Objects.equals(id, customer.id);
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }
