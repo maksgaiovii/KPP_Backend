@@ -26,4 +26,11 @@ public class CashRegister {
     public int queueSize() {
         return customersQueue.size();
     }
+    
+    @Override
+    public String toString() {
+        return "CashRegister{" +
+                       "uuid=" + uuid +
+                       '}';
+    }
 }

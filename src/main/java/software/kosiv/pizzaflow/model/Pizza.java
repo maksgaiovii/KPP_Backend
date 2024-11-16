@@ -38,6 +38,13 @@ public class Pizza extends Dish {
         isCompleted = true;
     }
     
+    @Override
+    public String toString() {
+        return "Pizza{" +
+                       "state=" + state +
+                       "} " + super.toString();
+    }
+    
     public enum PizzaState implements DishState {
         INITIAL("initial"),
         DOUGH_PREPARED("dough preparation"),

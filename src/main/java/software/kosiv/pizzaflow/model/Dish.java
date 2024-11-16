@@ -29,4 +29,11 @@ public abstract class Dish {
     public boolean isCompleted() {
         return isCompleted;
     }
+    
+    @Override
+    public String toString() {
+        return "Dish{" +
+                       "uuid=" + uuid +
+                       '}';
+    }
 }
