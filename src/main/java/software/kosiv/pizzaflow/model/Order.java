@@ -37,6 +37,16 @@ public class Order {
         setCompletedAt(LocalDateTime.now());
     }
     
+    @Override
+    public String toString() {
+        return "Order{" +
+                       "id=" + id +
+                       ", createdAt=" + createdAt +
+                       ", customer=" + customer +
+                       ", completedAt=" + completedAt +
+                       '}';
+    }
+    
     public Customer getCustomer() {
         return customer;
     }

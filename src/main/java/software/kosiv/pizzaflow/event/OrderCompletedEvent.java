@@ -18,7 +18,7 @@ public class OrderCompletedEvent extends ApplicationEvent {
     @Override
     public String toString() {
         return "OrderCompletedEvent{" +
-                       "order=" + order.getId() +
+                       "order=" + order +
                        '}';
     }
 }

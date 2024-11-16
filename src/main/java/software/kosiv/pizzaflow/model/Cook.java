@@ -45,6 +45,15 @@ public class Cook {
         return Objects.hashCode(id);
     }
     
+    @Override
+    public String toString() {
+        return "Cook{" +
+                       "id=" + id +
+                       ", name='" + name + '\'' +
+                       ", status=" + status +
+                       '}';
+    }
+    
     public CookStatus setPaused() {
         var prevStatus = getStatus();
         this.status = CookStatus.PAUSED;
