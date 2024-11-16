@@ -27,7 +27,7 @@ public class CashRegisterService {
         var cashRegister = cashRegisters.stream()
                                         .min(Comparator.comparing(CashRegister::queueSize))
                                         .orElseThrow(IllegalStateException::new); // fixme: change exception class
-        cashRegister.addCustomer(customer);
+        cashRegister.addCustomer(customer); //todo: add event
         if (cashRegister.queueSize() == 1) {
             processNextCustomer(cashRegister);
         }
@@ -44,7 +44,7 @@ public class CashRegisterService {
         if (cashRegister.queueSize() != 0) {
             Order order = cashRegister.nextCustomer().getOrder();
             order.setCashRegister(cashRegister);
-            orderService.processOrder(order);
+            orderService.processOrder(order); //todo: add event
         }
     }
     

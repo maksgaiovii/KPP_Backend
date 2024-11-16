@@ -42,7 +42,7 @@ public class CookService {
         Dish dish = orderItem.getDish();
         while (!dish.isCompleted()){
             publishDishPreparationStartEvent(cook, dish);
-            var dishState = cook.prepareDish(dish); // todo: send every dish status, not only completed
+            var dishState = cook.prepareDish(dish);
             publishDishPreparationCompletedEvent(cook, dish, dishState);
             
         }
