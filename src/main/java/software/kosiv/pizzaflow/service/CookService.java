@@ -102,8 +102,11 @@ public class CookService {
     private void processOrder(Cook cook, Order order) {
         var orderItems = order.getUncompletedOrderItems();
 
-        if (!orderItems.isEmpty()) {
-            completeOrderItem(cook, orderItems.getFirst());
+        for (OrderItem orderItem : orderItems) {
+            if (orderItem.tryLockForPreparation()) {
+                completeOrderItem(cook, orderItem);
+                break;
+            }
         }
 
         if (order.getCompletedAt() == null) {
@@ -111,7 +114,8 @@ public class CookService {
         }
     }
 
-    
+
+
     public void setCookCount(int count) {
         this.cooks = List.copyOf(generateCook(count));
         this.executorService = Executors.newFixedThreadPool(count);
