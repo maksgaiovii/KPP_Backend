@@ -20,7 +20,7 @@ public class SimulationController {
         this.simulationService = new SimulationService();
     }
 
-    @PostMapping("start")
+    @PostMapping("/start")
     public ResponseEntity<Map<String, String>> start() throws IllegalStateException {
         boolean started = simulationService.start();
         String responseMessage = "simulation " + (started ? "started" : "has already started");
@@ -28,7 +28,7 @@ public class SimulationController {
         return ResponseEntity.ok(Map.of("message", responseMessage));
     }
 
-    @PostMapping("pause")
+    @PostMapping("/pause")
     public ResponseEntity<Map<String, String>> pause() throws IllegalStateException {
         boolean paused = simulationService.pause();
         String responseMessage = "simulation " + (paused ? "paused" : "is currently not running");
@@ -36,7 +36,7 @@ public class SimulationController {
         return ResponseEntity.ok(Map.of("message", responseMessage));
     }
 
-    @PostMapping("terminate")
+    @PostMapping("/terminate")
     public ResponseEntity<Map<String, String>> terminate() {
         simulationService.terminate();
         return ResponseEntity.ok(Map.of("message", "simulation terminated"));

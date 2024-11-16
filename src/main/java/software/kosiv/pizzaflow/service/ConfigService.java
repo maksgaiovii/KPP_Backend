@@ -47,8 +47,8 @@ public class ConfigService implements IConfigService {
     @Override
     public SimulationConfig mapToSimulationConfig(StartConfigDto inputDto) {
         var config = new SimulationConfig();
-        // todo client generation interval
-        config.update(inputDto.cooksNumber(), inputDto.cashRegistersNumber(), inputDto.minimumPizzaTime(),
+        // todo client generation interval and minimum pizza time
+        config.update(inputDto.cooksNumber(), inputDto.cashRegistersNumber(), 8,
                 inputDto.specializedCooksMode(),8);
         return config;
     }
