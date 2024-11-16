@@ -106,7 +106,7 @@ public class CookService {
             completeOrderItem(cook, orderItems.getFirst());
         }
 
-        if (order.getCompletedAt() != null) {
+        if (order.getCompletedAt() == null) {
             orderQueue.add(order);
         }
     }
