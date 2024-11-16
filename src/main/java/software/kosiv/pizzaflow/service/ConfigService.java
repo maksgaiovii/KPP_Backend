@@ -23,7 +23,6 @@ public class ConfigService implements IConfigService {
         pizzeriaConfig.update(
                 3,
                 2,
-                10,
                 false,
                 8
         );
@@ -48,7 +47,7 @@ public class ConfigService implements IConfigService {
     public SimulationConfig mapToSimulationConfig(StartConfigDto inputDto) {
         var config = new SimulationConfig();
         // todo client generation interval and minimum pizza time
-        config.update(inputDto.cooksNumber(), inputDto.cashRegistersNumber(), 8,
+        config.update(inputDto.cooksNumber(), inputDto.cashRegistersNumber(),
                 inputDto.specializedCooksMode(),8);
         return config;
     }
