@@ -67,10 +67,12 @@ public class Order {
     public LocalDateTime getCompletedAt() {
         return completedAt;
     }
-    
+
+    public List<OrderItem> getUncompletedOrderItems() {
+        return uncompletedOrderItems;
+    }
+
     private void setCompletedAt(LocalDateTime completedAt) {
         this.completedAt = completedAt;
     }
-    
-    
 }
