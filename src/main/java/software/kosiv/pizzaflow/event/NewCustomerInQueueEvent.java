@@ -14,4 +14,12 @@ public class NewCustomerInQueueEvent extends ApplicationEvent {
         this.customer = customer;
         this.cashRegister = cashRegister;
     }
+    
+    @Override
+    public String toString() {
+        return "NewCustomerInQueueEvent{" +
+                       "customer=" + customer +
+                       ", cashRegister=" + cashRegister +
+                       '}';
+    }
 }

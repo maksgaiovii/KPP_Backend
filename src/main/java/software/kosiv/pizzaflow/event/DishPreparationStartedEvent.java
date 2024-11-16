@@ -36,7 +36,7 @@ public class DishPreparationStartedEvent extends ApplicationEvent {
         return "DishPreparationStartedEvent{" +
                        "dish=" + dish.getUuid() +
                        ", nextDishState=" + nextDishState +
-                       ", cook=" + cook.getName() +
+                       ", cook=" + cook +
                        '}';
     }
 }

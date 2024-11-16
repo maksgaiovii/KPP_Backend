@@ -11,4 +11,11 @@ public class CustomerCreatedEvent extends ApplicationEvent {
         super(source);
         this.customer = customer;
     }
+    
+    @Override
+    public String toString() {
+        return "CustomerCreatedEvent{" +
+                       "customer=" + customer +
+                       '}';
+    }
 }

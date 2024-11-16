@@ -13,4 +13,12 @@ public class OrderAcceptedEvent extends ApplicationEvent {
         this.order = order;
         this.cashRegister = cashRegister;
     }
+    
+    @Override
+    public String toString() {
+        return "OrderAcceptedEvent{" +
+                       "order=" + order +
+                       ", cashRegister=" + cashRegister +
+                       '}';
+    }
 }
