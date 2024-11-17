@@ -3,6 +3,7 @@ package software.kosiv.pizzaflow.model;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import java.util.List;
+import java.util.Objects;
 
 @JsonDeserialize(using = PizzaMenuItemDeserializer.class)
 public class PizzaMenuItem extends MenuItem {
