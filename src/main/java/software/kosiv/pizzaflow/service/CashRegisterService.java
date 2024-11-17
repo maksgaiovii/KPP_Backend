@@ -73,4 +73,6 @@ public class CashRegisterService {
             cashRegisters.add(new CashRegister());
         }
     }
+
+    public List<CashRegister> getCashRegisters() { return cashRegisters;}
 }
