@@ -1,5 +1,6 @@
 package software.kosiv.pizzaflow.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -10,6 +11,7 @@ import software.kosiv.pizzaflow.event.DishPreparationStartedEvent;
 import software.kosiv.pizzaflow.model.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Deque;
 import java.util.List;
 import java.util.concurrent.*;
@@ -120,4 +122,8 @@ public class CookService {
         this.cooks = List.copyOf(generateCook(count));
         this.executorService = Executors.newFixedThreadPool(count);
     }
+
+    public List<Cook> getCooks() { return cooks;}
+
+    public Deque<Order> getOrderQueue() { return orderQueue; }
 }
