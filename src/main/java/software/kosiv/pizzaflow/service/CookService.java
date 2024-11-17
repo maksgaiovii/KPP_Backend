@@ -3,7 +3,6 @@ package software.kosiv.pizzaflow.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import software.kosiv.pizzaflow.event.DishPreparationCompletedEvent;
 import software.kosiv.pizzaflow.event.DishPreparationStartedEvent;
@@ -13,26 +12,51 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static software.kosiv.pizzaflow.generator.CookGenerator.generateCook;
 
 @Service
 public class CookService {
     private final ApplicationEventPublisher eventPublisher;
-    private final Deque<Order> orderQueue;
+    private final ScheduledExecutorService scheduledExecutorService;
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+    private final Deque<Order> orderQueue;
     private List<Cook> cooks = new ArrayList<>();
+
     private final Logger logger = LoggerFactory.getLogger(CookService.class);
-    
+    private final AtomicBoolean isPaused = new AtomicBoolean(false);
+
     public CookService(ApplicationEventPublisher eventPublisher) {
         this.eventPublisher = eventPublisher;
         this.orderQueue = new LinkedBlockingDeque<>(1000);
+        this.scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+        scheduledExecutorService.scheduleAtFixedRate(this::checkWaitingQueue, 0, 1, TimeUnit.SECONDS);
     }
-    
+
     public void acceptOrder(Order order) {
         orderQueue.add(order);
     }
-    
+
+    public void setCookCount(int count) {
+        this.cooks = List.copyOf(generateCook(count));
+        this.executorService = Executors.newFixedThreadPool(count);
+    }
+
+    public void stop() {
+        isPaused.set(true);
+    }
+
+    public void resume() {
+        isPaused.set(false);
+    }
+
+    public void terminate() {
+        scheduledExecutorService.shutdownNow();
+        executorService.shutdownNow();
+    }
+
     private void assignOrderItemToCook(Cook cook, OrderItem orderItem) {
         cook.setBusy();
         Dish dish = orderItem.getDish();
@@ -77,9 +101,8 @@ public class CookService {
                     .orElse(null);
     }
 
-    @Scheduled(cron = "0/1 * * * * *")
-    public void checkWaitingQueue() {
-        if (orderQueue.isEmpty()) {
+    private void checkWaitingQueue() {
+        if (orderQueue.isEmpty() || isPaused.get()) {
             return;
         }
 
@@ -112,12 +135,5 @@ public class CookService {
         if (order.getCompletedAt() == null) {
             orderQueue.add(order);
         }
-    }
-
-
-
-    public void setCookCount(int count) {
-        this.cooks = List.copyOf(generateCook(count));
-        this.executorService = Executors.newFixedThreadPool(count);
     }
 }

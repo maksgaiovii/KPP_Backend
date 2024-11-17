@@ -24,7 +24,7 @@ public class ConfigService implements IConfigService {
                 3,
                 2,
                 false,
-                8
+                CustomerGenerationStrategy.MEDIUM
         );
     }
 
@@ -48,7 +48,7 @@ public class ConfigService implements IConfigService {
         var config = new SimulationConfig();
         // todo client generation interval and minimum pizza time
         config.update(inputDto.cooksNumber(), inputDto.cashRegistersNumber(),
-                inputDto.specializedCooksMode(),8);
+                inputDto.specializedCooksMode(),CustomerGenerationStrategy.MEDIUM);
         return config;
     }
 }
