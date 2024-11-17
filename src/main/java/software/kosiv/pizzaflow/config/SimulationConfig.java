@@ -26,4 +26,12 @@ public class SimulationConfig {
         this.specializedCooksMode = specializedCooksMode;
         this.clientGenerationInterval = clientGenerationInterval;
     }
+
+    public int getCooksNumber() {return cooksNumber;}
+
+    public int getCashRegistersNumber() {return cashRegistersNumber;}
+
+    public boolean isSpecializedCooksMode() {return specializedCooksMode;}
+
+    public int getClientGenerationInterval() {return clientGenerationInterval;}
 }
