@@ -1,6 +1,5 @@
 package software.kosiv.pizzaflow.websocket;
 
-import lombok.extern.log4j.Log4j2;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
@@ -10,7 +9,6 @@ import software.kosiv.pizzaflow.event.*;
 import java.time.LocalDateTime;
 
 @Component
-@Log4j2
 public class WebSocketEventHandler { // todo: write Event-DTO mappers
     
     private SimpMessagingTemplate template;
@@ -25,9 +23,19 @@ public class WebSocketEventHandler { // todo: write Event-DTO mappers
         CreatedCustomerDto dto = new CreatedCustomerDto(event.getCustomer().getId(),
                                                         event.getCustomer().getName(),
                                                         LocalDateTime.now());
-        log.info("Send {} to destination {}", dto, destination);
         template.convertAndSend(destination, dto);
     }
+    
+    @EventListener
+    public void handleNewCustomerInQueueEvent(NewCustomerInQueueEvent event) {
+        String destination = "/topic/new-customer-in-queue";
+        NewCustomerInQueueDto dto = new NewCustomerInQueueDto(event.getCustomer().getId(),
+                                                              event.getCashRegister().getId());
+        
+        template.convertAndSend(destination, dto);
+    }
+    
+    
     
     @EventListener
     public void handleOrderAcceptedEvent(OrderAcceptedEvent event) {
@@ -79,5 +87,6 @@ public class WebSocketEventHandler { // todo: write Event-DTO mappers
                                                                           event.getCook().getId());
         template.convertAndSend(destination, dto);
     }
+    
     
 }
