@@ -4,14 +4,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
-import software.kosiv.pizzaflow.dto.CreatedCustomerDto;
-import software.kosiv.pizzaflow.dto.DishPreparationStartedDto;
-import software.kosiv.pizzaflow.dto.OrderAcceptedDto;
-import software.kosiv.pizzaflow.dto.OrderCompletedDto;
-import software.kosiv.pizzaflow.event.CustomerCreatedEvent;
-import software.kosiv.pizzaflow.event.DishPreparationStartedEvent;
-import software.kosiv.pizzaflow.event.OrderAcceptedEvent;
-import software.kosiv.pizzaflow.event.OrderCompletedEvent;
+import software.kosiv.pizzaflow.dto.*;
+import software.kosiv.pizzaflow.event.*;
 
 import java.time.LocalDateTime;
 
@@ -70,6 +64,19 @@ public class WebSocketEventHandler { // todo: write Event-DTO mappers
                                                                            .getName(),
                                                                       event.getNextDishState(),
                                                                       event.getCook().getId());
+        template.convertAndSend(destination, dto);
+    }
+    
+    @EventListener
+    public void handleDishPreparationCompletedEvent(DishPreparationCompletedEvent event) {
+        String destination = "topic/dish-preparation-completed";
+        DishPreparationCompletedDto dto = new DishPreparationCompletedDto(event.getDish().getId(),
+                                                                          event.getDish()
+                                                                               .getOrderItem()
+                                                                               .getMenuItem()
+                                                                               .getName(),
+                                                                          event.getNewDishState(),
+                                                                          event.getCook().getId());
         template.convertAndSend(destination, dto);
     }
     
