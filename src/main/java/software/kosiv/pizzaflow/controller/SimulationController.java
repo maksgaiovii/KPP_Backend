@@ -2,15 +2,13 @@ package software.kosiv.pizzaflow.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import software.kosiv.pizzaflow.service.ConfigService;
 import software.kosiv.pizzaflow.service.ISimulationService;
 import software.kosiv.pizzaflow.service.SimulationService;
 
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/simulation")
@@ -52,6 +50,18 @@ public class SimulationController {
     public ResponseEntity<Map<String, String>> terminate() {
         simulationService.terminate();
         return ResponseEntity.ok(Map.of("message", "simulation terminated"));
+    }
+
+    @PostMapping("/stop/{id}")
+    public ResponseEntity<Map<String, String>> stopCook(@PathVariable String id) {
+        simulationService.stopCook(UUID.fromString(id));
+        return ResponseEntity.ok(Map.of("message", "cook stopped"));
+    }
+
+    @PostMapping("/resume/{id}")
+    public ResponseEntity<Map<String, String>> resumeCook(@PathVariable String id) {
+        simulationService.resumeCook(UUID.fromString(id));
+        return ResponseEntity.ok(Map.of("message", "cook resumed"));
     }
 
     @ExceptionHandler(IllegalStateException.class)

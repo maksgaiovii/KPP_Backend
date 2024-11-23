@@ -8,7 +8,7 @@ public class OrderItem {
     private final Order order;
     private final MenuItem menuItem;
     private Dish dish;
-    private AtomicBoolean isBeingPrepared = new AtomicBoolean(false);
+    private final AtomicBoolean isBeingPrepared = new AtomicBoolean(false);
 
     public OrderItem(Order order, MenuItem menuItem) {
         this.order = order;
@@ -44,5 +44,9 @@ public class OrderItem {
 
     public void unlockAfterPreparation() {
         isBeingPrepared.set(false);
+    }
+
+    public boolean isBeingPrepared() {
+        return isBeingPrepared.get();
     }
 }

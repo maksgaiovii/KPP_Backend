@@ -44,7 +44,7 @@ public class CustomerService {
     }
 
     public void terminate() {
-        executorService.shutdownNow();
+        stop();
     }
 
     public void setStrategy(CustomerGenerationStrategy strategy) {

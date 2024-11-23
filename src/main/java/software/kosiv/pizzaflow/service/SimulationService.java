@@ -4,11 +4,12 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
 import software.kosiv.pizzaflow.config.SimulationConfig;
+import java.util.UUID;
 
 @Getter
 @Setter
 @Service
-public class SimulationService implements ISimulationService{
+public class SimulationService implements ISimulationService {
     public SimulationStatus simulationStatus = SimulationStatus.INITIAL;
     private CookService cookService;
     private CashRegisterService cashRegisterService;
@@ -29,6 +30,7 @@ public class SimulationService implements ISimulationService{
         }
 
         cookService.setCookCount(simulationConfig.getCooksNumber());
+        cookService.setCookStrategy(simulationConfig.getCookStrategy());
         cashRegisterService.setCashRegistersCount(simulationConfig.getCashRegistersNumber());
         customerService.setStrategy(simulationConfig.getCustomerGenerationStrategy());
 
@@ -77,5 +79,15 @@ public class SimulationService implements ISimulationService{
         customerService.terminate();
 
         simulationStatus = SimulationStatus.TERMINATED;
+    }
+
+    @Override
+    public void stopCook(UUID id) throws IllegalStateException {
+        cookService.stopCook(id);
+    }
+
+    @Override
+    public void resumeCook(UUID id) throws IllegalStateException {
+        cookService.resumeCook(id);
     }
 }
