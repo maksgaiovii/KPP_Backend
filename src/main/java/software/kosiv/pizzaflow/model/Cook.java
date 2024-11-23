@@ -35,23 +35,24 @@ public class Cook {
         return newState;
     }
     
-    public CookStatus setPaused() {
+    public synchronized CookStatus setPaused() {
         var prevStatus = getStatus();
         this.status = CookStatus.PAUSED;
         strategy.setPaused();
         return prevStatus;
     }
     
-    public CookStatus setBusy() {
+    public synchronized CookStatus setBusy() {
         if (getStatus() == CookStatus.BUSY) {
             throw new BusyCookException("Cook is already busy");
         }
+
         var prevStatus = getStatus();
         this.status = CookStatus.BUSY;
         return prevStatus;
     }
     
-    public CookStatus setFree() {
+    public synchronized CookStatus setFree() {
         var prevStatus = getStatus();
         this.status = CookStatus.FREE;
         strategy.setFree();

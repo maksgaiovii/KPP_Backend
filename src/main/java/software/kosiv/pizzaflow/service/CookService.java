@@ -50,9 +50,10 @@ public class CookService {
         cooks.forEach(Cook::setFree);
     }
 
-    public void terminate() { // todo fix bug with termination
-        scheduledExecutorService.shutdownNow();
-        executorService.shutdownNow();
+    public void terminate() {
+        stop();
+        scheduledExecutorService.shutdown();
+        executorService.shutdown();
     }
 
     public void stopCook(UUID id) {
