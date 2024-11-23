@@ -5,6 +5,7 @@ import software.kosiv.pizzaflow.exception.PausedCookException;
 import software.kosiv.pizzaflow.service.ICookStrategy;
 
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 public class Cook {
@@ -12,6 +13,13 @@ public class Cook {
     private String name;
     private CookStatus status = CookStatus.FREE;
     private ICookStrategy strategy;
+    private final Set<DishState> availableSkills = Set.of(
+            Pizza.PizzaState.DOUGH_PREPARED,
+            Pizza.PizzaState.DOUGH_ROLLED,
+            Pizza.PizzaState.SAUCE_ADDED,
+            Pizza.PizzaState.TOPPING_ADDED,
+            Pizza.PizzaState.BAKED,
+            Pizza.PizzaState.FINISHING_TOUCHES);
     
     public Cook(String name) {
         this.name = name;
@@ -21,6 +29,11 @@ public class Cook {
         if (this.getStatus() == CookStatus.PAUSED) {
             throw new PausedCookException("Paused cook can't cook dish");
         }
+
+        if (!canCook(dish)) {
+            throw new IllegalArgumentException("Cook can't cook this dish state " + dish.getState());
+        }
+
         return strategy.prepareDish(dish);
     }
     
@@ -50,6 +63,10 @@ public class Cook {
     public void setStrategy(ICookStrategy strategy) {
         this.strategy = strategy;
         this.strategy.setCook(this);
+    }
+
+    public boolean canCook(Dish dish) {
+        return availableSkills.contains(dish.getNextState());
     }
 
     public UUID getId() {

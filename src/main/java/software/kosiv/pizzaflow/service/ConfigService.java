@@ -1,10 +1,12 @@
 package software.kosiv.pizzaflow.service;
 
 import jakarta.annotation.PostConstruct;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import software.kosiv.pizzaflow.config.SimulationConfig;
 import software.kosiv.pizzaflow.dto.StartConfigDto;
+import software.kosiv.pizzaflow.event.DishPreparationCompletedEvent;
+import software.kosiv.pizzaflow.event.DishPreparationStartedEvent;
+import software.kosiv.pizzaflow.event.TestLogger;
 import software.kosiv.pizzaflow.model.MenuItem;
 
 import java.util.List;
@@ -13,12 +15,12 @@ import java.util.List;
 public class ConfigService implements IConfigService {
     private final SimulationConfig pizzeriaConfig;
     private final MenuService menuService;
-    private final ApplicationEventPublisher eventPublisher;
+    private final EventService eventRegistry;
 
-    public ConfigService(SimulationConfig pizzeriaConfig, MenuService menuService, ApplicationEventPublisher eventPublisher) {
+    public ConfigService(SimulationConfig pizzeriaConfig, MenuService menuService, EventService eventRegistry) {
         this.pizzeriaConfig = pizzeriaConfig;
         this.menuService = menuService;
-        this.eventPublisher = eventPublisher;
+        this.eventRegistry = eventRegistry;
     }
 
     @PostConstruct
@@ -26,9 +28,15 @@ public class ConfigService implements IConfigService {
         pizzeriaConfig.update(
                 3,
                 2,
-                new WholeDishStrategy(eventPublisher),
+                getDefaultStrategy(),
                 CustomerGenerationStrategy.MEDIUM
         );
+
+        eventRegistry.registerEventManager(DishPreparationStartedEvent.class);
+        eventRegistry.registerEventManager(DishPreparationCompletedEvent.class);
+
+        eventRegistry.registerListener(DishPreparationStartedEvent.class, TestLogger::onEvent);
+        eventRegistry.registerListener(DishPreparationCompletedEvent.class, TestLogger::onEvent);
     }
 
     @Override
@@ -48,12 +56,26 @@ public class ConfigService implements IConfigService {
 
     @Override
     public SimulationConfig mapToSimulationConfig(StartConfigDto inputDto) {
-        ICookStrategy cookStrategy = inputDto.specializedCooksMode() ?
-                new WholeDishStrategy(eventPublisher) : new OneStepStrategy(eventPublisher);
-
+        var cookStrategy = getStrategy(inputDto);
         var config = new SimulationConfig();
         config.update(inputDto.cooksNumber(), inputDto.cashRegistersNumber(),
                 cookStrategy,CustomerGenerationStrategy.MEDIUM);
         return config;
+    }
+
+    private ICookStrategy getStrategy(StartConfigDto inputDto) {
+        var startEventManager = eventRegistry.getEventManager(DishPreparationStartedEvent.class);
+        var completedEventManager = eventRegistry.getEventManager(DishPreparationCompletedEvent.class);
+
+        return inputDto.specializedCooksMode() ?
+                new WholeDishStrategy(startEventManager, completedEventManager) :
+                new OneStepStrategy(startEventManager, completedEventManager);
+    }
+
+    private WholeDishStrategy getDefaultStrategy() {
+        var startEventManager = eventRegistry.getEventManager(DishPreparationStartedEvent.class);
+        var completedEventManager = eventRegistry.getEventManager(DishPreparationCompletedEvent.class);
+
+        return new WholeDishStrategy(startEventManager, completedEventManager);
     }
 }

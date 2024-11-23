@@ -61,7 +61,7 @@ public class CookService {
             return;
         }
 
-        var prevState = cook.setPaused();
+        cook.setPaused();
     }
 
     public void resumeCook(UUID id) {
@@ -109,7 +109,7 @@ public class CookService {
         var orderItems = order.getUncompletedOrderItems();
 
         for (OrderItem orderItem : orderItems) {
-            if (orderItem.tryLockForPreparation()) {
+            if (orderItem.tryLockForPreparation() && cook.canCook(orderItem.getDish())) {
                 processOrderItem(cook, orderItem);
                 break;
             }
@@ -135,7 +135,7 @@ public class CookService {
         cook.prepareDish(dish);
         cook.setFree();
     }
-    
+
     private List<Cook> findAllAvailableCooks() {
         return cooks.stream()
                     .filter(Cook::isAvailable)

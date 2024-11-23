@@ -1,8 +1,8 @@
 package software.kosiv.pizzaflow.service;
 
-import org.springframework.context.ApplicationEventPublisher;
 import software.kosiv.pizzaflow.event.DishPreparationCompletedEvent;
 import software.kosiv.pizzaflow.event.DishPreparationStartedEvent;
+import software.kosiv.pizzaflow.event.EventManager;
 import software.kosiv.pizzaflow.model.Cook;
 import software.kosiv.pizzaflow.model.Dish;
 import software.kosiv.pizzaflow.model.DishState;
@@ -11,11 +11,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class OneStepStrategy implements ICookStrategy {
     private final AtomicBoolean isPaused = new AtomicBoolean(false);
-    private final ApplicationEventPublisher eventPublisher;
+    private final EventManager<DishPreparationStartedEvent> startEventManager;
+    private final EventManager<DishPreparationCompletedEvent> completedEventManager;
     private Cook cook;
 
-    public OneStepStrategy(ApplicationEventPublisher eventPublisher) {
-        this.eventPublisher = eventPublisher;
+    public OneStepStrategy(
+            EventManager<DishPreparationStartedEvent> startEventManager,
+            EventManager<DishPreparationCompletedEvent> completedEventManager
+    ) {
+        this.startEventManager = startEventManager;
+        this.completedEventManager = completedEventManager;
     }
 
     @Override
@@ -24,9 +29,9 @@ public class OneStepStrategy implements ICookStrategy {
             return dish.getState();
         }
 
-        publishDishPreparationStartEvent(cook, dish);
+        startEventManager.publishEvent(new DishPreparationStartedEvent(this, dish, dish.getNextState(), cook));
         dish.toNextState();
-        publishDishPreparationCompletedEvent(cook, dish, dish.getState());
+        completedEventManager.publishEvent(new DishPreparationCompletedEvent(this, dish, dish.getState(), cook));
 
         return dish.getState();
     }
@@ -44,15 +49,5 @@ public class OneStepStrategy implements ICookStrategy {
     @Override
     public void setCook(Cook cook) {
         this.cook = cook;
-    }
-
-    private void publishDishPreparationStartEvent(Cook cook, Dish dish) {
-        var event = new DishPreparationStartedEvent(this, dish, dish.getNextState(), cook);
-        eventPublisher.publishEvent(event);
-    }
-
-    private void publishDishPreparationCompletedEvent(Cook cook, Dish dish, DishState dishState) {
-        var event = new DishPreparationCompletedEvent(this, dish, dishState, cook);
-        eventPublisher.publishEvent(event);
     }
 }
