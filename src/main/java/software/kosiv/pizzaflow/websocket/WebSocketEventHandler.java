@@ -6,8 +6,10 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 import software.kosiv.pizzaflow.dto.CreatedCustomerDto;
 import software.kosiv.pizzaflow.dto.OrderAcceptedDto;
+import software.kosiv.pizzaflow.dto.OrderCompletedDto;
 import software.kosiv.pizzaflow.event.CustomerCreatedEvent;
 import software.kosiv.pizzaflow.event.OrderAcceptedEvent;
+import software.kosiv.pizzaflow.event.OrderCompletedEvent;
 
 import java.time.LocalDateTime;
 
@@ -43,6 +45,16 @@ public class WebSocketEventHandler { // todo: write Event-DTO mappers
                                                     event.getOrder().getCustomer().getId(),
                                                     event.getCashRegister().getId(),
                                                     LocalDateTime.now());
+        template.convertAndSend(destination, dto);
+    }
+    
+    @EventListener
+    public void handleOrderCompleted(OrderCompletedEvent event) {
+        String destination = "topic/order-completed";
+        OrderCompletedDto dto = new OrderCompletedDto(event.getOrder().getId(),
+                                                      event.getOrder().getCustomer().getId(),
+                                                      event.getCashRegister().getId(),
+                                                      event.getOrder().getCompletedAt());
         template.convertAndSend(destination, dto);
     }
     
