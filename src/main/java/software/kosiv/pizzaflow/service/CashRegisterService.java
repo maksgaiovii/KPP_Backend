@@ -44,7 +44,7 @@ public class CashRegisterService {
     public void closeOrder(Order order) {
         var cashRegister = order.getCashRegister();
         cashRegister.removeCustomer(order.getCustomer());
-        eventPublisher.publishEvent(new OrderCompletedEvent(this, order));
+        eventPublisher.publishEvent(new OrderCompletedEvent(this, order, cashRegister));
         processNextCustomer(cashRegister);
     }
     

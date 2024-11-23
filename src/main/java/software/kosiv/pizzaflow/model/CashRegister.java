@@ -5,7 +5,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class CashRegister {
-    private final UUID uuid = UUID.randomUUID();
+    private final UUID id = UUID.randomUUID();
     private final BlockingQueue<Customer> customersQueue = new LinkedBlockingQueue<>();
     
     public void addCustomer(Customer customer) {
@@ -30,7 +30,11 @@ public class CashRegister {
     @Override
     public String toString() {
         return "CashRegister{" +
-                       "uuid=" + uuid +
+                       "uuid=" + id +
                        '}';
+    }
+    
+    public UUID getId() {
+        return id;
     }
 }
