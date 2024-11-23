@@ -36,7 +36,7 @@ public class CookService {
     }
 
     public void setCookCount(int count) {
-        this.cooks = List.copyOf(generate(count));
+        this.cooks = List.copyOf(generate(count, new ArrayList<>(Pizza.PizzaState.getPreparationSteps())));
         this.executorService = Executors.newFixedThreadPool(count);
     }
 
@@ -73,7 +73,7 @@ public class CookService {
 
     public void setCookStrategy(ICookStrategy strategy) {
         for (Cook cook : cooks) {
-            cook.setStrategy(strategy);
+            cook.setStrategy(strategy.clone());
         }
     }
 
@@ -95,44 +95,45 @@ public class CookService {
 
     private void processOrders(List<Cook> availableCooks) {
         for (Cook cook : availableCooks) {
-            Order order = orderQueue.poll();
+            Order order = findAvailibleOrder(cook);
 
-            if (order == null) {
-                break;
+            if (order != null) {
+                processOrder(cook, order);
             }
-
-            processOrder(cook, order);
         }
     }
 
     private void processOrder(Cook cook, Order order) {
-        var orderItems = order.getUncompletedOrderItems();
+        var orderItem = order.getUncompletedOrderItems().stream()
+                             .filter(orderItem1 -> cook.canCook(orderItem1.getDish()))
+                             .findFirst()
+                             .orElseThrow();
 
-        for (OrderItem orderItem : orderItems) {
-            if (orderItem.tryLockForPreparation() && cook.canCook(orderItem.getDish())) {
-                processOrderItem(cook, orderItem);
-                break;
-            }
-        }
-
-        if (order.getCompletedAt() == null) {
-            orderQueue.add(order);
-        }
+        orderQueue.remove(order);
+        processOrderItem(cook, orderItem);
     }
 
     private void processOrderItem(Cook cook, OrderItem orderItem) {
-        logger.info("Cook {} start cooking order item {} with id {} from order {}",
-                cook.getName(),
-                orderItem.getMenuItem().getName(),
-                orderItem.getId(),
-                orderItem.getOrder().getId());
-        executorService.execute(() -> assignOrderItemToCook(cook, orderItem));
+        if(orderItem.tryLockForPreparation()) {
+            logger.info("Cook {} start cooking order item {} with id {} from order {}",
+                    cook.getName(),
+                    orderItem.getMenuItem().getName(),
+                    orderItem.getId(),
+                    orderItem.getOrder().getId());
+
+            executorService.execute(() ->
+            {
+                assignOrderItemToCook(cook, orderItem);
+                if (orderItem.getOrder().getCompletedAt() == null) {
+                    orderQueue.add(orderItem.getOrder());
+                }
+            });
+        }
     }
 
     private void assignOrderItemToCook(Cook cook, OrderItem orderItem) {
         cook.setBusy();
-        Dish dish = orderItem.getDish();
-        cook.prepareDish(dish);
+        cook.prepareDish(orderItem);
         cook.setFree();
     }
 
@@ -140,5 +141,14 @@ public class CookService {
         return cooks.stream()
                     .filter(Cook::isAvailable)
                     .toList();
+    }
+
+    private Order findAvailibleOrder(Cook cook) {
+        return orderQueue.stream()
+                         .filter(order -> order.getUncompletedOrderItems().stream()
+                                               .anyMatch(orderItem -> cook.canCook(orderItem.getDish())
+                                                                      && !orderItem.isBeingPrepared()))
+                         .findFirst()
+                         .orElse(null);
     }
 }

@@ -46,4 +46,9 @@ public class WholeDishStrategy implements ICookStrategy {
     public void setCook(Cook cook) {
         this.cook = cook;
     }
+
+    @Override
+    public ICookStrategy clone() {
+        return new WholeDishStrategy(startEventManager, completedEventManager);
+    }
 }

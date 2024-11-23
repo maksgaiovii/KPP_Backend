@@ -4,6 +4,7 @@ import software.kosiv.pizzaflow.exception.BusyCookException;
 import software.kosiv.pizzaflow.exception.PausedCookException;
 import software.kosiv.pizzaflow.service.ICookStrategy;
 
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -13,19 +14,14 @@ public class Cook {
     private String name;
     private CookStatus status = CookStatus.FREE;
     private ICookStrategy strategy;
-    private final Set<DishState> availableSkills = Set.of(
-            Pizza.PizzaState.DOUGH_PREPARED,
-            Pizza.PizzaState.DOUGH_ROLLED,
-            Pizza.PizzaState.SAUCE_ADDED,
-            Pizza.PizzaState.TOPPING_ADDED,
-            Pizza.PizzaState.BAKED,
-            Pizza.PizzaState.FINISHING_TOUCHES);
+    private final Set<DishState> availableSkills = new HashSet<>();
     
     public Cook(String name) {
         this.name = name;
     }
 
-    public DishState prepareDish(Dish dish) {
+    public DishState prepareDish(OrderItem orderItem) {
+        var dish = orderItem.getDish();
         if (this.getStatus() == CookStatus.PAUSED) {
             throw new PausedCookException("Paused cook can't cook dish");
         }
@@ -34,7 +30,9 @@ public class Cook {
             throw new IllegalArgumentException("Cook can't cook this dish state " + dish.getState());
         }
 
-        return strategy.prepareDish(dish);
+        var newState = strategy.prepareDish(dish);
+        orderItem.unlockAfterPreparation();
+        return newState;
     }
     
     public CookStatus setPaused() {
@@ -67,6 +65,18 @@ public class Cook {
 
     public boolean canCook(Dish dish) {
         return availableSkills.contains(dish.getNextState());
+    }
+
+    public void addSkill(DishState skill) {
+        availableSkills.add(skill);
+    }
+
+    public void removeSkill(DishState skill) {
+        availableSkills.remove(skill);
+    }
+
+    public Set<DishState> getSkills() {
+        return availableSkills;
     }
 
     public UUID getId() {

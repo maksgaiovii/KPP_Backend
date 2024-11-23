@@ -6,7 +6,6 @@ import software.kosiv.pizzaflow.config.SimulationConfig;
 import software.kosiv.pizzaflow.dto.StartConfigDto;
 import software.kosiv.pizzaflow.event.DishPreparationCompletedEvent;
 import software.kosiv.pizzaflow.event.DishPreparationStartedEvent;
-import software.kosiv.pizzaflow.event.TestLogger;
 import software.kosiv.pizzaflow.model.MenuItem;
 
 import java.util.List;
@@ -25,18 +24,18 @@ public class ConfigService implements IConfigService {
 
     @PostConstruct
     public void initDefaultConfig() {
+        var startEventManager = eventRegistry.getEventManager(DishPreparationStartedEvent.class);
+        var completedEventManager = eventRegistry.getEventManager(DishPreparationCompletedEvent.class);
+
         pizzeriaConfig.update(
                 3,
                 2,
-                getDefaultStrategy(),
+                new OneStepStrategy(startEventManager, completedEventManager),
                 CustomerGenerationStrategy.MEDIUM
         );
 
         eventRegistry.registerEventManager(DishPreparationStartedEvent.class);
         eventRegistry.registerEventManager(DishPreparationCompletedEvent.class);
-
-        eventRegistry.registerListener(DishPreparationStartedEvent.class, TestLogger::onEvent);
-        eventRegistry.registerListener(DishPreparationCompletedEvent.class, TestLogger::onEvent);
     }
 
     @Override

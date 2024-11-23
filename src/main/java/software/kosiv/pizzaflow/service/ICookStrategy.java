@@ -4,7 +4,7 @@ import software.kosiv.pizzaflow.model.Cook;
 import software.kosiv.pizzaflow.model.Dish;
 import software.kosiv.pizzaflow.model.DishState;
 
-public interface ICookStrategy {
+public interface ICookStrategy extends Cloneable {
     DishState prepareDish(Dish dish);
 
     void setPaused();
@@ -12,4 +12,6 @@ public interface ICookStrategy {
     void setFree();
 
     void setCook(Cook cook);
+
+    ICookStrategy clone();
 }

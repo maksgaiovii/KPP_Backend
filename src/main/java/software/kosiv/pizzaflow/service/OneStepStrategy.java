@@ -50,4 +50,9 @@ public class OneStepStrategy implements ICookStrategy {
     public void setCook(Cook cook) {
         this.cook = cook;
     }
+
+    @Override
+    public ICookStrategy clone() {
+        return new OneStepStrategy(startEventManager, completedEventManager);
+    }
 }
