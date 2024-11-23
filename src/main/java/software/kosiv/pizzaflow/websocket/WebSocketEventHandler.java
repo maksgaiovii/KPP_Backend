@@ -39,7 +39,7 @@ public class WebSocketEventHandler { // todo: write Event-DTO mappers
     
     @EventListener
     public void handleOrderAcceptedEvent(OrderAcceptedEvent event) {
-        String destination = "topic/order-accepted";
+        String destination = "/topic/order-accepted";
         OrderAcceptedDto dto = new OrderAcceptedDto(event.getOrder().getId(),
                                                     event.getOrder()
                                                          .getOrderItems()
@@ -54,7 +54,7 @@ public class WebSocketEventHandler { // todo: write Event-DTO mappers
     
     @EventListener
     public void handleOrderCompleted(OrderCompletedEvent event) {
-        String destination = "topic/order-completed";
+        String destination = "/topic/order-completed";
         OrderCompletedDto dto = new OrderCompletedDto(event.getOrder().getId(),
                                                       event.getOrder().getCustomer().getId(),
                                                       event.getCashRegister().getId(),
@@ -64,7 +64,7 @@ public class WebSocketEventHandler { // todo: write Event-DTO mappers
     
     @EventListener
     public void handleDishPreparationStarted(DishPreparationStartedEvent event) {
-        String destination = "topic/dish-preparation-started";
+        String destination = "/topic/dish-preparation-started";
         DishPreparationStartedDto dto = new DishPreparationStartedDto(event.getDish().getId(),
                                                                       event.getDish()
                                                                            .getOrderItem()
@@ -77,7 +77,7 @@ public class WebSocketEventHandler { // todo: write Event-DTO mappers
     
     @EventListener
     public void handleDishPreparationCompletedEvent(DishPreparationCompletedEvent event) {
-        String destination = "topic/dish-preparation-completed";
+        String destination = "/topic/dish-preparation-completed";
         DishPreparationCompletedDto dto = new DishPreparationCompletedDto(event.getDish().getId(),
                                                                           event.getDish()
                                                                                .getOrderItem()

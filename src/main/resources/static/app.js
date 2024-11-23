@@ -8,7 +8,23 @@ stompClient.onConnect = (frame) => {
     stompClient.subscribe('/topic/customer-created', (greeting) => {
         showMessage(greeting.body);
     });
+    stompClient.subscribe('/topic/new-customer-in-queue', (greeting) => {
+        showMessage(greeting.body);
+    });
+    stompClient.subscribe('/topic/order-accepted', (greeting) => {
+        showMessage(greeting.body);
+    });
+    stompClient.subscribe('/topic/corder-completed', (greeting) => {
+        showMessage(greeting.body);
+    });
+    stompClient.subscribe('/topic/dish-preparation-started', (greeting) => {
+        showMessage(greeting.body);
+    });
+    stompClient.subscribe('/topic/dish-preparation-completed', (greeting) => {
+        showMessage(greeting.body);
+    });
 };
+
 
 stompClient.onWebSocketError = (error) => {
     console.error('Error with websocket', error);
