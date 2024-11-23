@@ -3,19 +3,22 @@ package software.kosiv.pizzaflow.model;
 import java.util.UUID;
 
 public abstract class Dish {
-    private final UUID uuid;
+    private final UUID id;
     private final OrderItem orderItem;
     protected boolean isCompleted;
     
     public Dish(OrderItem orderItem){
         this.orderItem = orderItem;
-        this.uuid = orderItem.getId();
+        this.id = orderItem.getId();
     }
     
     public abstract DishState toNextState();
     
-    public UUID getUuid() {
-        return uuid;
+    @Override
+    public String toString() {
+        return "Dish{" +
+                       "uuid=" + id +
+                       '}';
     }
     
     public OrderItem getOrderItem() {
@@ -30,10 +33,7 @@ public abstract class Dish {
         return isCompleted;
     }
     
-    @Override
-    public String toString() {
-        return "Dish{" +
-                       "uuid=" + uuid +
-                       '}';
+    public UUID getId() {
+        return id;
     }
 }

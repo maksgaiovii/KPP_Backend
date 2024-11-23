@@ -5,9 +5,11 @@ import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 import software.kosiv.pizzaflow.dto.CreatedCustomerDto;
+import software.kosiv.pizzaflow.dto.DishPreparationStartedDto;
 import software.kosiv.pizzaflow.dto.OrderAcceptedDto;
 import software.kosiv.pizzaflow.dto.OrderCompletedDto;
 import software.kosiv.pizzaflow.event.CustomerCreatedEvent;
+import software.kosiv.pizzaflow.event.DishPreparationStartedEvent;
 import software.kosiv.pizzaflow.event.OrderAcceptedEvent;
 import software.kosiv.pizzaflow.event.OrderCompletedEvent;
 
@@ -58,5 +60,17 @@ public class WebSocketEventHandler { // todo: write Event-DTO mappers
         template.convertAndSend(destination, dto);
     }
     
+    @EventListener
+    public void handleDishPreparationStarted(DishPreparationStartedEvent event) {
+        String destination = "topic/dish-preparation-started";
+        DishPreparationStartedDto dto = new DishPreparationStartedDto(event.getDish().getId(),
+                                                                      event.getDish()
+                                                                           .getOrderItem()
+                                                                           .getMenuItem()
+                                                                           .getName(),
+                                                                      event.getNextDishState(),
+                                                                      event.getCook().getId());
+        template.convertAndSend(destination, dto);
+    }
     
 }
