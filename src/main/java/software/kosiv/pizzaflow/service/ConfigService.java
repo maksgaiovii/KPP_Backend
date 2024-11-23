@@ -1,6 +1,7 @@
 package software.kosiv.pizzaflow.service;
 
 import jakarta.annotation.PostConstruct;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import software.kosiv.pizzaflow.config.SimulationConfig;
 import software.kosiv.pizzaflow.dto.StartConfigDto;
@@ -12,10 +13,12 @@ import java.util.List;
 public class ConfigService implements IConfigService {
     private final SimulationConfig pizzeriaConfig;
     private final MenuService menuService;
+    private final ApplicationEventPublisher eventPublisher;
 
-    public ConfigService(SimulationConfig pizzeriaConfig, MenuService menuService) {
+    public ConfigService(SimulationConfig pizzeriaConfig, MenuService menuService, ApplicationEventPublisher eventPublisher) {
         this.pizzeriaConfig = pizzeriaConfig;
         this.menuService = menuService;
+        this.eventPublisher = eventPublisher;
     }
 
     @PostConstruct
@@ -23,7 +26,7 @@ public class ConfigService implements IConfigService {
         pizzeriaConfig.update(
                 3,
                 2,
-                false,
+                new WholeDishStrategy(eventPublisher),
                 CustomerGenerationStrategy.MEDIUM
         );
     }
@@ -45,10 +48,12 @@ public class ConfigService implements IConfigService {
 
     @Override
     public SimulationConfig mapToSimulationConfig(StartConfigDto inputDto) {
+        ICookStrategy cookStrategy = inputDto.specializedCooksMode() ?
+                new WholeDishStrategy(eventPublisher) : new OneStepStrategy(eventPublisher);
+
         var config = new SimulationConfig();
-        // todo client generation interval and minimum pizza time
         config.update(inputDto.cooksNumber(), inputDto.cashRegistersNumber(),
-                inputDto.specializedCooksMode(),CustomerGenerationStrategy.MEDIUM);
+                cookStrategy,CustomerGenerationStrategy.MEDIUM);
         return config;
     }
 }

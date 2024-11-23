@@ -29,6 +29,7 @@ public class SimulationService implements ISimulationService{
         }
 
         cookService.setCookCount(simulationConfig.getCooksNumber());
+        cookService.setCookStrategy(simulationConfig.getCookStrategy());
         cashRegisterService.setCashRegistersCount(simulationConfig.getCashRegistersNumber());
         customerService.setStrategy(simulationConfig.getCustomerGenerationStrategy());
 
