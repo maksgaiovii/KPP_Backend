@@ -1,9 +1,10 @@
 package software.kosiv.pizzaflow.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import software.kosiv.pizzaflow.model.*;
+import software.kosiv.pizzaflow.model.Cook;
+import software.kosiv.pizzaflow.model.Order;
+import software.kosiv.pizzaflow.model.OrderItem;
+import software.kosiv.pizzaflow.model.Pizza;
 
 import java.util.ArrayList;
 import java.util.Deque;
@@ -22,7 +23,6 @@ public class CookService {
     private final Deque<Order> orderQueue;
     private List<Cook> cooks = new ArrayList<>();
 
-    private final Logger logger = LoggerFactory.getLogger(CookService.class);
     private final AtomicBoolean isPaused = new AtomicBoolean(false);
 
     public CookService() {
@@ -116,12 +116,6 @@ public class CookService {
 
     private void processOrderItem(Cook cook, OrderItem orderItem) {
         if(orderItem.tryLockForPreparation()) {
-            logger.info("Cook {} start cooking order item {} with id {} from order {}",
-                    cook.getName(),
-                    orderItem.getMenuItem().getName(),
-                    orderItem.getId(),
-                    orderItem.getOrder().getId());
-
             executorService.execute(() ->
             {
                 assignOrderItemToCook(cook, orderItem);
