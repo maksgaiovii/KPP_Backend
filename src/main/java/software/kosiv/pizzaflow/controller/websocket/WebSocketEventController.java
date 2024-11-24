@@ -1,7 +1,7 @@
 package software.kosiv.pizzaflow.controller.websocket;
 
 import org.springframework.context.event.EventListener;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import software.kosiv.pizzaflow.dto.*;
 import software.kosiv.pizzaflow.event.*;
@@ -9,38 +9,34 @@ import software.kosiv.pizzaflow.event.*;
 import java.time.LocalDateTime;
 
 @Controller
+@SendTo("/topic")
 public class WebSocketEventController { // todo: write Event-DTO mappers
     
-    private SimpMessagingTemplate template;
-    
-    public WebSocketEventController(SimpMessagingTemplate template) {
-        this.template = template;
+    public WebSocketEventController() {
     }
     
     @EventListener
-    public void handleCustomerCreatedEvent(CustomerCreatedEvent event) {
-        String destination = "/topic/customer-created";
-        CreatedCustomerDto dto = new CreatedCustomerDto(event.getCustomer().getId(),
+    @SendTo("/customer-created")
+    public CreatedCustomerDto handleCustomerCreatedEvent(CustomerCreatedEvent event) {
+        return new CreatedCustomerDto(event.getCustomer().getId(),
                                                         event.getCustomer().getName(),
                                                         LocalDateTime.now());
-        template.convertAndSend(destination, dto);
     }
     
     @EventListener
-    public void handleNewCustomerInQueueEvent(NewCustomerInQueueEvent event) {
-        String destination = "/topic/new-customer-in-queue";
-        NewCustomerInQueueDto dto = new NewCustomerInQueueDto(event.getCustomer().getId(),
+    @SendTo("/new-customer-in-queue")
+    public NewCustomerInQueueDto handleNewCustomerInQueueEvent(NewCustomerInQueueEvent event) {
+        return new NewCustomerInQueueDto(event.getCustomer().getId(),
                                                               event.getCashRegister().getId());
         
-        template.convertAndSend(destination, dto);
     }
     
     
     
     @EventListener
-    public void handleOrderAcceptedEvent(OrderAcceptedEvent event) {
-        String destination = "/topic/order-accepted";
-        OrderAcceptedDto dto = new OrderAcceptedDto(event.getOrder().getId(),
+    @SendTo("/order-accepted")
+    public OrderAcceptedDto handleOrderAcceptedEvent(OrderAcceptedEvent event) {
+        return new OrderAcceptedDto(event.getOrder().getId(),
                                                     event.getOrder()
                                                          .getOrderItems()
                                                          .stream()
@@ -49,43 +45,39 @@ public class WebSocketEventController { // todo: write Event-DTO mappers
                                                     event.getOrder().getCustomer().getId(),
                                                     event.getCashRegister().getId(),
                                                     LocalDateTime.now());
-        template.convertAndSend(destination, dto);
     }
     
     @EventListener
-    public void handleOrderCompleted(OrderCompletedEvent event) {
-        String destination = "/topic/order-completed";
-        OrderCompletedDto dto = new OrderCompletedDto(event.getOrder().getId(),
+    @SendTo("/order-completed")
+    public OrderCompletedDto handleOrderCompleted(OrderCompletedEvent event) {
+        return new OrderCompletedDto(event.getOrder().getId(),
                                                       event.getOrder().getCustomer().getId(),
                                                       event.getCashRegister().getId(),
                                                       event.getOrder().getCompletedAt());
-        template.convertAndSend(destination, dto);
     }
     
     @EventListener
-    public void handleDishPreparationStarted(DishPreparationStartedEvent event) {
-        String destination = "/topic/dish-preparation-started";
-        DishPreparationStartedDto dto = new DishPreparationStartedDto(event.getDish().getId(),
+    @SendTo("/dish-preparation-started")
+    public DishPreparationStartedDto handleDishPreparationStarted(DishPreparationStartedEvent event) {
+        return new DishPreparationStartedDto(event.getDish().getId(),
                                                                       event.getDish()
                                                                            .getOrderItem()
                                                                            .getMenuItem()
                                                                            .getName(),
                                                                       event.getNextDishState(),
                                                                       event.getCook().getId());
-        template.convertAndSend(destination, dto);
     }
     
     @EventListener
-    public void handleDishPreparationCompletedEvent(DishPreparationCompletedEvent event) {
-        String destination = "/topic/dish-preparation-completed";
-        DishPreparationCompletedDto dto = new DishPreparationCompletedDto(event.getDish().getId(),
+    @SendTo("/dish-preparation-completed")
+    public DishPreparationCompletedDto handleDishPreparationCompletedEvent(DishPreparationCompletedEvent event) {
+        return new DishPreparationCompletedDto(event.getDish().getId(),
                                                                           event.getDish()
                                                                                .getOrderItem()
                                                                                .getMenuItem()
                                                                                .getName(),
                                                                           event.getNewDishState(),
                                                                           event.getCook().getId());
-        template.convertAndSend(destination, dto);
     }
     
     
