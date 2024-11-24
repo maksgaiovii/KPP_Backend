@@ -1,16 +1,10 @@
-package software.kosiv.pizzaflow.service;
+package software.kosiv.pizzaflow.model;
 
 import software.kosiv.pizzaflow.event.DishPreparationCompletedEvent;
 import software.kosiv.pizzaflow.event.DishPreparationStartedEvent;
 import software.kosiv.pizzaflow.event.EventManager;
-import software.kosiv.pizzaflow.model.Cook;
-import software.kosiv.pizzaflow.model.Dish;
-import software.kosiv.pizzaflow.model.DishState;
-
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class OneStepStrategy implements ICookStrategy {
-    private final AtomicBoolean isPaused = new AtomicBoolean(false);
     private final EventManager<DishPreparationStartedEvent> startEventManager;
     private final EventManager<DishPreparationCompletedEvent> completedEventManager;
     private Cook cook;
@@ -25,7 +19,7 @@ public class OneStepStrategy implements ICookStrategy {
 
     @Override
     public DishState prepareDish(Dish dish) {
-        if (isPaused.get()) {
+        if (cook.getStatus() == CookStatus.PAUSED) {
             return dish.getState();
         }
 
@@ -34,16 +28,6 @@ public class OneStepStrategy implements ICookStrategy {
         completedEventManager.publishEvent(new DishPreparationCompletedEvent(this, dish, dish.getState(), cook));
 
         return dish.getState();
-    }
-
-    @Override
-    public void setPaused() {
-        isPaused.set(true);
-    }
-
-    @Override
-    public void setFree() {
-        isPaused.set(false);
     }
 
     @Override

@@ -65,10 +65,6 @@ public class Pizza extends Dish {
         public String getStateName() {
             return stateName;
         }
-
-        public static List<PizzaState> getPreparationSteps() {
-            return List.of(DOUGH_PREPARED, DOUGH_ROLLED, SAUCE_ADDED, TOPPING_ADDED, BAKED, FINISHING_TOUCHES, COMPLETED);
-        }
     }
     
     public static class PizzaPreparationStrategy implements PreparationStrategy<PizzaState> {

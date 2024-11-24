@@ -2,7 +2,6 @@ package software.kosiv.pizzaflow.model;
 
 import software.kosiv.pizzaflow.exception.BusyCookException;
 import software.kosiv.pizzaflow.exception.PausedCookException;
-import software.kosiv.pizzaflow.service.ICookStrategy;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -38,7 +37,6 @@ public class Cook {
     public synchronized CookStatus setPaused() {
         var prevStatus = getStatus();
         this.status = CookStatus.PAUSED;
-        strategy.setPaused();
         return prevStatus;
     }
     
@@ -55,7 +53,6 @@ public class Cook {
     public synchronized CookStatus setFree() {
         var prevStatus = getStatus();
         this.status = CookStatus.FREE;
-        strategy.setFree();
         return prevStatus;
     }
 

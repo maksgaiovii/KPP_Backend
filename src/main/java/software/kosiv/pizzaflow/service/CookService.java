@@ -5,10 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import software.kosiv.pizzaflow.model.*;
 
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -36,7 +33,7 @@ public class CookService {
     }
 
     public void setCookCount(int count) {
-        this.cooks = List.copyOf(generate(count, new ArrayList<>(Pizza.PizzaState.getPreparationSteps())));
+        this.cooks = List.copyOf(generate(count, Arrays.asList( Pizza.PizzaState.values())));
         this.executorService = Executors.newFixedThreadPool(count);
     }
 
