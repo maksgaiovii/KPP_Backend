@@ -2,7 +2,9 @@ package software.kosiv.pizzaflow.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import software.kosiv.pizzaflow.event.CookChangeStateEvent;
 import software.kosiv.pizzaflow.model.*;
 
 import java.util.*;
@@ -13,23 +15,25 @@ import static software.kosiv.pizzaflow.generator.CookGenerator.generate;
 
 @Service
 public class CookService {
+    private final ApplicationEventPublisher eventPublisher;
+    private final Logger logger = LoggerFactory.getLogger(CookService.class);
+
     private final ScheduledExecutorService scheduledExecutorService;
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
-
-    private final Deque<Order> orderQueue;
-    private List<Cook> cooks = new ArrayList<>();
-
-    private final Logger logger = LoggerFactory.getLogger(CookService.class);
     private final AtomicBoolean isPaused = new AtomicBoolean(false);
 
-    public CookService() {
-        this.orderQueue = new LinkedBlockingDeque<>(1000);
+    private final Deque<Order> orderDeque;
+    private List<Cook> cooks = new ArrayList<>();
+
+    public CookService(ApplicationEventPublisher eventPublisher) {
+        this.eventPublisher = eventPublisher;
+        this.orderDeque = new LinkedBlockingDeque<>(1000);
         this.scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
         scheduledExecutorService.scheduleAtFixedRate(this::checkWaitingQueue, 0, 1, TimeUnit.SECONDS);
     }
 
     public void acceptOrder(Order order) {
-        orderQueue.add(order);
+        orderDeque.add(order);
     }
 
     public void setCookCount(int count) {
@@ -59,13 +63,16 @@ public class CookService {
             return;
         }
 
+        CookStatus previousStatus = cook.getStatus();
         cook.setPaused();
+        eventPublisher.publishEvent(new CookChangeStateEvent(this, cook, previousStatus));
     }
 
     public void resumeCook(UUID id) {
         Cook cook = findCookById(id);
         if (cook != null) {
             cook.setFree();
+            eventPublisher.publishEvent(new CookChangeStateEvent(this, cook, CookStatus.PAUSED));
         }
     }
 
@@ -83,7 +90,7 @@ public class CookService {
     }
 
     private void checkWaitingQueue() {
-        if (orderQueue.isEmpty() || isPaused.get()) {
+        if (orderDeque.isEmpty() || isPaused.get()) {
             return;
         }
 
@@ -107,7 +114,7 @@ public class CookService {
                              .findFirst()
                              .orElseThrow();
 
-        orderQueue.remove(order);
+        orderDeque.remove(order);
         processOrderItem(cook, orderItem);
     }
 
@@ -123,7 +130,7 @@ public class CookService {
             {
                 assignOrderItemToCook(cook, orderItem);
                 if (orderItem.getOrder().getCompletedAt() == null) {
-                    orderQueue.add(orderItem.getOrder());
+                    orderDeque.add(orderItem.getOrder());
                 }
             });
         }
@@ -131,8 +138,10 @@ public class CookService {
 
     private void assignOrderItemToCook(Cook cook, OrderItem orderItem) {
         cook.setBusy();
+        eventPublisher.publishEvent(new CookChangeStateEvent(this, cook, CookStatus.FREE));
         cook.prepareDish(orderItem);
         cook.setFree();
+        eventPublisher.publishEvent(new CookChangeStateEvent(this, cook, CookStatus.BUSY));
     }
 
     private List<Cook> findAllAvailableCooks() {
@@ -142,7 +151,7 @@ public class CookService {
     }
 
     private Order findAvailibleOrder(Cook cook) {
-        return orderQueue.stream()
+        return orderDeque.stream()
                          .filter(order -> order.getUncompletedOrderItems().stream()
                                                .anyMatch(orderItem -> cook.canCook(orderItem.getDish())
                                                                       && !orderItem.isBeingPrepared()))
