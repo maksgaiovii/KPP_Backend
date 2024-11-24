@@ -42,18 +42,17 @@ public class CashRegisterServiceTest {
     @Test
     public void testAddCustomer() {
         Customer customer = new Customer("John Doe");
+
         cashRegisterService.addCustomer(customer);
 
-        // Перевіряємо, що клієнт доданий до черги каси
         assertEquals(1, cashRegister.queueSize());
 
-        // Перевіряємо, що було опубліковано подію NewCustomerInQueueEvent
         verify(eventPublisher).publishEvent(any(NewCustomerInQueueEvent.class));
 
-        // Перевіряємо, що наступний клієнт був оброблений (якщо каса порожня)
         verify(orderService).processOrder(any(Order.class));
         verify(eventPublisher).publishEvent(any(OrderAcceptedEvent.class));
     }
+
 
 
 
