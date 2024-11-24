@@ -1,21 +1,7 @@
 package software.kosiv.pizzaflow.model;
 
-import software.kosiv.pizzaflow.event.DishPreparationCompletedEvent;
-import software.kosiv.pizzaflow.event.DishPreparationStartedEvent;
-import software.kosiv.pizzaflow.event.EventManager;
-
 public class OneStepStrategy implements ICookStrategy {
-    private final EventManager<DishPreparationStartedEvent> startEventManager;
-    private final EventManager<DishPreparationCompletedEvent> completedEventManager;
     private Cook cook;
-
-    public OneStepStrategy(
-            EventManager<DishPreparationStartedEvent> startEventManager,
-            EventManager<DishPreparationCompletedEvent> completedEventManager
-    ) {
-        this.startEventManager = startEventManager;
-        this.completedEventManager = completedEventManager;
-    }
 
     @Override
     public DishState prepareDish(Dish dish) {
@@ -23,10 +9,7 @@ public class OneStepStrategy implements ICookStrategy {
             return dish.getState();
         }
 
-        startEventManager.publishEvent(new DishPreparationStartedEvent(this, dish, dish.getNextState(), cook));
-        dish.toNextState();
-        completedEventManager.publishEvent(new DishPreparationCompletedEvent(this, dish, dish.getState(), cook));
-
+        dish.toNextState(cook);
         return dish.getState();
     }
 
@@ -37,6 +20,6 @@ public class OneStepStrategy implements ICookStrategy {
 
     @Override
     public ICookStrategy clone() {
-        return new OneStepStrategy(startEventManager, completedEventManager);
+        return new OneStepStrategy();
     }
 }

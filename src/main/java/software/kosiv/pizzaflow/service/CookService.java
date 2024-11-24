@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import software.kosiv.pizzaflow.event.CookChangeStateEvent;
+import software.kosiv.pizzaflow.event.DishPreparationCompletedEvent;
+import software.kosiv.pizzaflow.event.DishPreparationStartedEvent;
 import software.kosiv.pizzaflow.model.*;
 
 import java.util.*;
@@ -14,7 +16,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static software.kosiv.pizzaflow.generator.CookGenerator.generate;
 
 @Service
-public class CookService {
+public class CookService implements IDishPreparationEventListener {
     private final ApplicationEventPublisher eventPublisher;
     private final Logger logger = LoggerFactory.getLogger(CookService.class);
 
@@ -33,6 +35,7 @@ public class CookService {
     }
 
     public void acceptOrder(Order order) {
+        order.getOrderItems().forEach(orderItem -> orderItem.getDish().subscribe(this));
         orderDeque.add(order);
     }
 
@@ -82,6 +85,16 @@ public class CookService {
         }
     }
 
+    @Override
+    public void onDishPreparationStartedEvent(DishPreparationStartedEvent event) {
+        eventPublisher.publishEvent(event);
+    }
+
+    @Override
+    public void onDishPreparationCompletedEvent(DishPreparationCompletedEvent event) {
+        eventPublisher.publishEvent(event);
+    }
+
     private Cook findCookById(UUID id) {
         return cooks.stream()
                     .filter(cook -> cook.getId().equals(id))
@@ -129,8 +142,12 @@ public class CookService {
             executorService.execute(() ->
             {
                 assignOrderItemToCook(cook, orderItem);
-                if (orderItem.getOrder().getCompletedAt() == null) {
+                Order order = orderItem.getOrder();
+                if (order.getCompletedAt() == null) {
                     orderDeque.add(orderItem.getOrder());
+                }
+                else {
+                    order.getOrderItems().forEach(item -> item.getDish().unsubscribe(this));
                 }
             });
         }

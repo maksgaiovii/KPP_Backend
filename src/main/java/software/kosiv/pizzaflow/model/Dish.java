@@ -2,7 +2,7 @@ package software.kosiv.pizzaflow.model;
 
 import java.util.UUID;
 
-public abstract class Dish {
+public abstract class Dish implements IDishPreparationEventPublisher {
     private final UUID id;
     private final OrderItem orderItem;
     protected boolean isCompleted;
@@ -12,7 +12,7 @@ public abstract class Dish {
         this.id = orderItem.getId();
     }
     
-    public abstract DishState toNextState();
+    public abstract DishState toNextState(Cook cook);
     
     @Override
     public String toString() {
