@@ -5,8 +5,6 @@ import software.kosiv.pizzaflow.model.Cook;
 import software.kosiv.pizzaflow.model.Dish;
 import software.kosiv.pizzaflow.model.DishState;
 
-import java.time.Clock;
-
 public class DishPreparationStartedEvent extends ApplicationEvent {
     private final Dish dish;
     private final DishState nextDishState;
@@ -34,7 +32,7 @@ public class DishPreparationStartedEvent extends ApplicationEvent {
     @Override
     public String toString() {
         return "DishPreparationStartedEvent{" +
-                       "dish=" + dish.getUuid() +
+                       "dish=" + dish.getId() +
                        ", nextDishState=" + nextDishState +
                        ", cook=" + cook +
                        '}';

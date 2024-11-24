@@ -3,6 +3,8 @@ package software.kosiv.pizzaflow.config;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
+import software.kosiv.pizzaflow.service.CustomerGenerationStrategy;
+import software.kosiv.pizzaflow.service.ICookStrategy;
 
 @Component
 @Getter
@@ -10,21 +12,21 @@ import org.springframework.stereotype.Component;
 public class SimulationConfig {
     private int cooksNumber;
     private int cashRegistersNumber;
-    private boolean specializedCooksMode;
-    private int clientGenerationInterval;
+    private ICookStrategy cookStrategy;
+    private CustomerGenerationStrategy customerGenerationStrategy;
 
     public void update(SimulationConfig config){
         this.cooksNumber = config.cooksNumber;
         this.cashRegistersNumber = config.cashRegistersNumber;
-        this.specializedCooksMode = config.specializedCooksMode;
-        this.clientGenerationInterval = config.clientGenerationInterval;
+        this.cookStrategy = config.cookStrategy;
+        this.customerGenerationStrategy = config.customerGenerationStrategy;
     }
 
-    public void update(int cooksNumber, int cashRegistersNumber, boolean specializedCooksMode, int clientGenerationInterval) {
+    public void update(int cooksNumber, int cashRegistersNumber, ICookStrategy cookStrategy, CustomerGenerationStrategy customerGenerationStrategy) {
         this.cooksNumber = cooksNumber;
         this.cashRegistersNumber = cashRegistersNumber;
-        this.specializedCooksMode = specializedCooksMode;
-        this.clientGenerationInterval = clientGenerationInterval;
+        this.cookStrategy = cookStrategy;
+        this.customerGenerationStrategy = customerGenerationStrategy;
     }
 
     public int getCooksNumber() {return cooksNumber;}
