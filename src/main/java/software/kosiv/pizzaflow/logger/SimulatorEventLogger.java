@@ -11,12 +11,12 @@ public class SimulatorEventLogger {
     
     @EventListener
     public void logCustomerCreatedEvent(CustomerCreatedEvent event) {
-        log.info("Created: {}", event.getCustomer());
+        log.info("Created {}", event.getCustomer());
     }
     
     @EventListener
     public void logNewCustomerInQueueEvent(NewCustomerInQueueEvent event) {
-        log.info("Customer: {} in queue {}", event.getCustomer(), event.getCashRegister());
+        log.info("{} in queue {}", event.getCustomer(), event.getCashRegister());
     }
     
     @EventListener
@@ -37,17 +37,19 @@ public class SimulatorEventLogger {
     
     @EventListener
     public void logDishPreparationStarted(DishPreparationStartedEvent event) {
-        log.info("{} started preparation dish with id {} to state {}",
+        log.info("{} started preparation dish with id {} from order with id {} to state {}",
                  event.getCook(),
                  event.getDish().getId(),
+                 event.getDish().getOrderItem().getOrder().getId(),
                  event.getNextDishState());
     }
     
     @EventListener
     public void logDishPreparationCompletedEvent(DishPreparationCompletedEvent event) {
-        log.info("{} completed preparation dish with id {} to state {}",
+        log.info("{} completed preparation dish with id {} from order with id {} to state {}",
                  event.getCook(),
                  event.getDish().getId(),
+                 event.getDish().getOrderItem().getOrder().getId(),
                  event.getNewDishState());
     }
 }
