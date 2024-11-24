@@ -2,7 +2,6 @@ package software.kosiv.pizzaflow.model;
 
 import software.kosiv.pizzaflow.exception.BusyCookException;
 import software.kosiv.pizzaflow.exception.PausedCookException;
-import software.kosiv.pizzaflow.service.ICookStrategy;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -15,7 +14,7 @@ public class Cook {
     private CookStatus status = CookStatus.FREE;
     private ICookStrategy strategy;
     private final Set<DishState> availableSkills = new HashSet<>();
-    
+
     public Cook(String name) {
         this.name = name;
     }
@@ -34,14 +33,13 @@ public class Cook {
         orderItem.unlockAfterPreparation();
         return newState;
     }
-    
+
     public synchronized CookStatus setPaused() {
         var prevStatus = getStatus();
         this.status = CookStatus.PAUSED;
-        strategy.setPaused();
         return prevStatus;
     }
-    
+
     public synchronized CookStatus setBusy() {
         if (getStatus() == CookStatus.BUSY) {
             throw new BusyCookException("Cook is already busy");
@@ -51,11 +49,10 @@ public class Cook {
         this.status = CookStatus.BUSY;
         return prevStatus;
     }
-    
+
     public synchronized CookStatus setFree() {
         var prevStatus = getStatus();
         this.status = CookStatus.FREE;
-        strategy.setFree();
         return prevStatus;
     }
 
@@ -83,23 +80,23 @@ public class Cook {
     public UUID getId() {
         return id;
     }
-    
+
     public String getName() {
         return name;
     }
-    
+
     public void setName(String name) {
         this.name = name;
     }
-    
+
     public CookStatus getStatus() {
         return status;
     }
-    
+
     private void setStatus(CookStatus status) {
         this.status = status;
     }
-    
+
     public boolean isAvailable() {
         return this.status == CookStatus.FREE;
     }

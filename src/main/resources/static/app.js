@@ -14,7 +14,7 @@ stompClient.onConnect = (frame) => {
     stompClient.subscribe('/topic/order-accepted', (greeting) => {
         showMessage(greeting.body);
     });
-    stompClient.subscribe('/topic/corder-completed', (greeting) => {
+    stompClient.subscribe('/topic/order-completed', (greeting) => {
         showMessage(greeting.body);
     });
     stompClient.subscribe('/topic/dish-preparation-started', (greeting) => {

@@ -1,32 +1,37 @@
 package software.kosiv.pizzaflow.generator;
 
+import net.datafaker.Faker;
 import software.kosiv.pizzaflow.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 public class CustomerGenerator {
-    private int count = 1;
     private final Random random = new Random();
-    
-    public Customer generateCustomer(){ // todo: better name generation for customer
-        return new Customer("Customer" + count++);
+    private final Faker faker = new Faker(Locale.ITALIAN);
+
+    public Customer generateCustomer() {
+        String customerName = faker.name().firstName() + " " + faker.name().lastName();
+        return new Customer(customerName);
     }
-    
-    public Customer generateCustomerWithOrder(Menu menu){
+
+    public Customer generateCustomerWithOrder(Menu menu) {
         Customer customer = generateCustomer();
         generateOrder(menu, customer);
         return customer;
     }
-    
-    private Order generateOrder(Menu menu, Customer customer){
+
+    private void generateOrder(Menu menu, Customer customer) {
         int orderItemCount = random.nextInt(1, 6);
         List<MenuItem> menuItems = new ArrayList<>(orderItemCount);
         int menuSize = menu.getMenuItems().size();
+
         for (int i = 0; i < orderItemCount; i++) {
             menuItems.add(menu.getMenuItems().get(random.nextInt(0, menuSize)));
         }
-        return new Order(menuItems, customer);
+
+        new Order(menuItems, customer);
     }
 }

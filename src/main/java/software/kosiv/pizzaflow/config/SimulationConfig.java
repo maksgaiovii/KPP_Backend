@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 import software.kosiv.pizzaflow.service.CustomerGenerationStrategy;
-import software.kosiv.pizzaflow.service.ICookStrategy;
+import software.kosiv.pizzaflow.model.ICookStrategy;
 
 @Component
 @Getter

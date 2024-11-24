@@ -1,17 +1,22 @@
 package software.kosiv.pizzaflow.generator;
 
+import net.datafaker.Faker;
 import software.kosiv.pizzaflow.model.Cook;
 import software.kosiv.pizzaflow.model.DishState;
 import software.kosiv.pizzaflow.model.Pizza;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class CookGenerator {
+
+    private static final Faker faker = new Faker(Locale.ITALIAN);
+
     public static List<Cook> generate(int count) {
         List<Cook> cookList = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
-            Cook cook = new Cook("Name" + i);
+            Cook cook = new Cook(faker.name().firstName() + " " + faker.name().lastName());
             addAllPizzaStates(cook);
             cookList.add(cook);
         }
@@ -19,13 +24,9 @@ public class CookGenerator {
     }
 
     private static void addAllPizzaStates(Cook cook) {
-        cook.addSkill(Pizza.PizzaState.DOUGH_PREPARED);
-        cook.addSkill(Pizza.PizzaState.DOUGH_ROLLED);
-        cook.addSkill(Pizza.PizzaState.SAUCE_ADDED);
-        cook.addSkill(Pizza.PizzaState.TOPPING_ADDED);
-        cook.addSkill(Pizza.PizzaState.BAKED);
-        cook.addSkill(Pizza.PizzaState.FINISHING_TOUCHES);
-        cook.addSkill(Pizza.PizzaState.COMPLETED);
+        for (Pizza.PizzaState state : Pizza.PizzaState.values()) {
+            cook.addSkill(state);
+        }
     }
 
     public static List<Cook> generate(int count, List<DishState> states) {
@@ -37,7 +38,7 @@ public class CookGenerator {
         int stateIndex = 0;
 
         for (int i = 0; i < count; i++) {
-            Cook cook = new Cook("Cook" + (i + 1));
+            Cook cook = new Cook(faker.name().firstName() + " " + faker.name().lastName());
 
             int skillsForThisCook = statesPerCook + (extraStates > 0 ? 1 : 0);
             if (extraStates > 0) {
