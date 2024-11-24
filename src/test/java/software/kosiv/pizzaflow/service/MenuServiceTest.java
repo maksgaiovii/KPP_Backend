@@ -60,10 +60,7 @@ class MenuServiceTest {
 
     @Test
     void getMenu() {
-        // Отримання меню
         Menu menu = menuService.getMenu();
-
-        // Перевірка, що меню не пусте
         assertNotNull(menu, "Menu should not be null.");
         assertFalse(menu.getMenuItems().isEmpty(), "Menu should contain items.");
 
@@ -113,10 +110,8 @@ class MenuServiceTest {
 
     @Test
     void addNullMenuItem() {
-        // Спроба додати null елемент до меню
         menuService.addMenuItem(null);
 
-        // Перевірка, що меню не змінилось
         assertEquals(2, menuService.getMenu().getMenuItems().size(),
                 "Menu size should remain the same if null item is added.");
     }

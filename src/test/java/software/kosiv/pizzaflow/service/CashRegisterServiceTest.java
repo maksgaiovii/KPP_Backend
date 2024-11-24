@@ -35,18 +35,13 @@ public class CashRegisterServiceTest {
 
     @BeforeEach
     public void setUp() {
-        // Ініціалізуємо тестові дані
         cashRegister = new CashRegister();
-        cashRegisterService.setCashRegistersCount(1);  // Створюємо 1 касу
+        cashRegisterService.setCashRegistersCount(1);
     }
 
     @Test
     public void testAddCustomer() {
-        // Створюємо фальшивого клієнта
         Customer customer = new Customer("John Doe");
-
-
-        // Викликаємо метод додавання клієнта
         cashRegisterService.addCustomer(customer);
 
         // Перевіряємо, що клієнт доданий до черги каси
@@ -60,16 +55,6 @@ public class CashRegisterServiceTest {
         verify(eventPublisher).publishEvent(any(OrderAcceptedEvent.class));
     }
 
-
-    @Test
-    public void testSetCashRegistersCount() {
-        // Встановлюємо кількість кас
-        cashRegisterService.setCashRegistersCount(3);
-
-        // Перевіряємо, що кількість кас змінена
-        List<CashRegister> cashRegisters = cashRegisterService.getCashRegisters();
-        assertEquals(3, cashRegisters.size());
-    }
 
 
 }

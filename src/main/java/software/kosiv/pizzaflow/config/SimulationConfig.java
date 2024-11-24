@@ -28,12 +28,4 @@ public class SimulationConfig {
         this.cookStrategy = cookStrategy;
         this.customerGenerationStrategy = customerGenerationStrategy;
     }
-
-    public int getCooksNumber() {return cooksNumber;}
-
-    public int getCashRegistersNumber() {return cashRegistersNumber;}
-
-    public boolean isSpecializedCooksMode() {return specializedCooksMode;}
-
-    public int getClientGenerationInterval() {return clientGenerationInterval;}
 }
