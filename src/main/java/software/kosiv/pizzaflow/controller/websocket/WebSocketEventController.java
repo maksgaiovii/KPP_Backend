@@ -2,18 +2,18 @@ package software.kosiv.pizzaflow.controller.websocket;
 
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 import software.kosiv.pizzaflow.dto.*;
 import software.kosiv.pizzaflow.event.*;
 
 import java.time.LocalDateTime;
 
-@Component
-public class WebSocketEventHandler { // todo: write Event-DTO mappers
+@Controller
+public class WebSocketEventController { // todo: write Event-DTO mappers
     
     private SimpMessagingTemplate template;
     
-    public WebSocketEventHandler(SimpMessagingTemplate template) {
+    public WebSocketEventController(SimpMessagingTemplate template) {
         this.template = template;
     }
     
