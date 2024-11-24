@@ -1,4 +1,4 @@
-package software.kosiv.pizzaflow.websocket;
+package software.kosiv.pizzaflow.controller.websocket;
 
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
