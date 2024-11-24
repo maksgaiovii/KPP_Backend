@@ -3,85 +3,92 @@ package software.kosiv.pizzaflow.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import software.kosiv.pizzaflow.event.DishPreparationCompletedEvent;
-import software.kosiv.pizzaflow.event.DishPreparationStartedEvent;
 import software.kosiv.pizzaflow.model.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-import static software.kosiv.pizzaflow.generator.CookGenerator.generateCook;
+import static software.kosiv.pizzaflow.generator.CookGenerator.generate;
 
 @Service
 public class CookService {
-    private final ApplicationEventPublisher eventPublisher;
-    private final Deque<Order> orderQueue;
+    private final ScheduledExecutorService scheduledExecutorService;
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+    private final Deque<Order> orderQueue;
     private List<Cook> cooks = new ArrayList<>();
+
     private final Logger logger = LoggerFactory.getLogger(CookService.class);
-    
-    public CookService(ApplicationEventPublisher eventPublisher) {
-        this.eventPublisher = eventPublisher;
+    private final AtomicBoolean isPaused = new AtomicBoolean(false);
+
+    public CookService() {
         this.orderQueue = new LinkedBlockingDeque<>(1000);
+        this.scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+        scheduledExecutorService.scheduleAtFixedRate(this::checkWaitingQueue, 0, 1, TimeUnit.SECONDS);
     }
-    
+
     public void acceptOrder(Order order) {
         orderQueue.add(order);
     }
-    
-    private void assignOrderItemToCook(Cook cook, OrderItem orderItem) {
-        cook.setBusy();
-        Dish dish = orderItem.getDish();
-        while (!dish.isCompleted()){
-            publishDishPreparationStartEvent(cook, dish);
-            var dishState = cook.prepareDish(dish);
-            publishDishPreparationCompletedEvent(cook, dish, dishState);
-            
+
+    public void setCookCount(int count) {
+        this.cooks = List.copyOf(generate(count, new ArrayList<>(Pizza.PizzaState.getPreparationSteps())));
+        this.executorService = Executors.newFixedThreadPool(count);
+    }
+
+    public void stop() {
+        isPaused.set(true);
+        cooks.forEach(Cook::setPaused);
+    }
+
+    public void resume() {
+        isPaused.set(false);
+        cooks.forEach(Cook::setFree);
+    }
+
+    public void terminate() {
+        stop();
+        scheduledExecutorService.shutdown();
+        executorService.shutdown();
+    }
+
+    public void stopCook(UUID id) {
+        Cook cook = findCookById(id);
+        if (cook == null) {
+            return;
         }
-        cook.setFree();
+
+        cook.setPaused();
     }
-    
-    private void completeOrderItem(Cook cook, OrderItem orderItem) {
-        logger.info("Cook {} start cooking order item {} with id {} from order {}",
-                    cook.getName(),
-                    orderItem.getMenuItem().getName(),
-                    orderItem.getId(),
-                    orderItem.getOrder().getId());
-        executorService.execute(() -> assignOrderItemToCook(cook, orderItem));
+
+    public void resumeCook(UUID id) {
+        Cook cook = findCookById(id);
+        if (cook != null) {
+            cook.setFree();
+        }
     }
-    
-    private void publishDishPreparationStartEvent(Cook cook, Dish dish) {
-        var event = new DishPreparationStartedEvent(this, dish, dish.getNextState(), cook);
-        eventPublisher.publishEvent(event);
+
+    public void setCookStrategy(ICookStrategy strategy) {
+        for (Cook cook : cooks) {
+            cook.setStrategy(strategy.clone());
+        }
     }
-    
-    private void publishDishPreparationCompletedEvent(Cook cook, Dish dish, DishState dishState) {
-        var event = new DishPreparationCompletedEvent(this, dish, dishState, cook);
-        eventPublisher.publishEvent(event);
-    }
-    
-    private List<Cook> findAllAvailableCooks() {
+
+    private Cook findCookById(UUID id) {
         return cooks.stream()
-                    .filter(Cook::isAvailable)
-                    .toList();
-    }
-    
-    private Cook findAvailableCook() {
-        return cooks.stream()
-                    .filter(Cook::isAvailable)
+                    .filter(cook -> cook.getId().equals(id))
                     .findFirst()
                     .orElse(null);
     }
 
-    @Scheduled(cron = "0/1 * * * * *")
-    public void checkWaitingQueue() {
-        if (orderQueue.isEmpty()) {
+    private void checkWaitingQueue() {
+        if (orderQueue.isEmpty() || isPaused.get()) {
             return;
         }
 
@@ -91,36 +98,61 @@ public class CookService {
 
     private void processOrders(List<Cook> availableCooks) {
         for (Cook cook : availableCooks) {
-            Order order = orderQueue.poll();
+            Order order = findAvailibleOrder(cook);
 
-            if (order == null) {
-                break;
+            if (order != null) {
+                processOrder(cook, order);
             }
-
-            processOrder(cook, order);
         }
     }
 
     private void processOrder(Cook cook, Order order) {
-        var orderItems = order.getUncompletedOrderItems();
+        var orderItem = order.getUncompletedOrderItems().stream()
+                             .filter(orderItem1 -> cook.canCook(orderItem1.getDish()))
+                             .findFirst()
+                             .orElseThrow();
 
-        for (OrderItem orderItem : orderItems) {
-            if (orderItem.tryLockForPreparation()) {
-                completeOrderItem(cook, orderItem);
-                break;
-            }
-        }
+        orderQueue.remove(order);
+        processOrderItem(cook, orderItem);
+    }
 
-        if (order.getCompletedAt() == null) {
-            orderQueue.add(order);
+    private void processOrderItem(Cook cook, OrderItem orderItem) {
+        if(orderItem.tryLockForPreparation()) {
+            logger.info("Cook {} start cooking order item {} with id {} from order {}",
+                    cook.getName(),
+                    orderItem.getMenuItem().getName(),
+                    orderItem.getId(),
+                    orderItem.getOrder().getId());
+
+            executorService.execute(() ->
+            {
+                assignOrderItemToCook(cook, orderItem);
+                if (orderItem.getOrder().getCompletedAt() == null) {
+                    orderQueue.add(orderItem.getOrder());
+                }
+            });
         }
     }
 
+    private void assignOrderItemToCook(Cook cook, OrderItem orderItem) {
+        cook.setBusy();
+        cook.prepareDish(orderItem);
+        cook.setFree();
+    }
 
+    private List<Cook> findAllAvailableCooks() {
+        return cooks.stream()
+                    .filter(Cook::isAvailable)
+                    .toList();
+    }
 
-    public void setCookCount(int count) {
-        this.cooks = List.copyOf(generateCook(count));
-        this.executorService = Executors.newFixedThreadPool(count);
+    private Order findAvailibleOrder(Cook cook) {
+        return orderQueue.stream()
+                         .filter(order -> order.getUncompletedOrderItems().stream()
+                                               .anyMatch(orderItem -> cook.canCook(orderItem.getDish())
+                                                                      && !orderItem.isBeingPrepared()))
+                         .findFirst()
+                         .orElse(null);
     }
 
     public List<Cook> getCooks() { return cooks;}

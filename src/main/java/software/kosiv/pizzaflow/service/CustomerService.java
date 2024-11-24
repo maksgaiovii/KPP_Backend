@@ -1,5 +1,6 @@
 package software.kosiv.pizzaflow.service;
 
+import lombok.Getter;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import software.kosiv.pizzaflow.event.CustomerCreatedEvent;
@@ -12,51 +13,59 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class CustomerService {
-    private final SimulationService simulationService;
     private final CashRegisterService cashRegisterService;
     private final MenuService menuService;
     private final ApplicationEventPublisher eventPublisher;
     private final CustomerGenerator generator = new CustomerGenerator();
-    private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+    private ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+    @Getter
     private CustomerGenerationStrategy strategy = CustomerGenerationStrategy.MEDIUM;
     
-    public CustomerService(SimulationService simulationService,
-                           CashRegisterService cashRegisterService,
+    public CustomerService(CashRegisterService cashRegisterService,
                            MenuService menuService,
                            ApplicationEventPublisher eventPublisher) {
-        this.simulationService = simulationService;
         this.cashRegisterService = cashRegisterService;
         this.menuService = menuService;
         this.eventPublisher = eventPublisher;
     }
     
     public void createCustomer() {
-        if (simulationService.getSimulationStatus() == SimulationStatus.RUNNING) {
-            Customer customer = generator.generateCustomerWithOrder(menuService.getMenu());
-            publishCustomerCreatedEvent(customer);
-            cashRegisterService.addCustomer(customer);
-        }
+        Customer customer = generator.generateCustomerWithOrder(menuService.getMenu());
+        publishCustomerCreatedEvent(customer);
+        cashRegisterService.addCustomer(customer);
     }
-    
+
+    public void stop() {
+        executorService.shutdown();
+    }
+
+    public void resume() {
+        setExecutorService();
+    }
+
+    public void terminate() {
+        stop();
+    }
+
+    public void setStrategy(CustomerGenerationStrategy strategy) {
+        this.strategy = strategy;
+        setExecutorService();
+    }
+
     private void publishCustomerCreatedEvent(Customer customer) {
         var event = new CustomerCreatedEvent(this, customer);
         eventPublisher.publishEvent(event);
     }
     
     private void setExecutorService() {
+        if (!executorService.isShutdown()) {
+            executorService.shutdown();
+        }
+
+        executorService = Executors.newScheduledThreadPool(1);
         executorService.scheduleWithFixedDelay(this::createCustomer,
                                                0,
                                                strategy.getGenerationFrequencyInSeconds(),
                                                TimeUnit.SECONDS);
-    }
-    
-    public CustomerGenerationStrategy getStrategy() {
-        return strategy;
-    }
-    
-    public void setStrategy(CustomerGenerationStrategy strategy) {
-        this.strategy = strategy;
-        executorService.shutdown();
-        setExecutorService();
     }
 }
