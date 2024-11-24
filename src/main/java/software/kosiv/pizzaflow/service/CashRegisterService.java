@@ -74,5 +74,5 @@ public class CashRegisterService {
         }
     }
 
-    public List<CashRegister> getCashRegisters() { return cashRegisters;}
+
 }

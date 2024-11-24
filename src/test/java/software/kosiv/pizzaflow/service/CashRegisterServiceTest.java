@@ -43,7 +43,6 @@ public class CashRegisterServiceTest {
     public void testAddCustomer() {
         Customer customer = new Customer("John Doe");
 
-
         cashRegisterService.addCustomer(customer);
 
         assertEquals(1, cashRegister.queueSize());
@@ -55,13 +54,6 @@ public class CashRegisterServiceTest {
     }
 
 
-    @Test
-    public void testSetCashRegistersCount() {
-        cashRegisterService.setCashRegistersCount(3);
-
-        List<CashRegister> cashRegisters = cashRegisterService.getCashRegisters();
-        assertEquals(3, cashRegisters.size());
-    }
 
 
 }

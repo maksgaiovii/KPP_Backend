@@ -45,10 +45,8 @@ class CookServiceTest {
 
     @Test
     void testSetCookCount() {
-        // Перевіряємо, чи змінюється кількість кухарів
         cookService.setCookCount(5);
 
-        // Перевіряємо, чи створено правильну кількість кухарів
         assertEquals(5, cookService.getCooks().size());
     }
 
