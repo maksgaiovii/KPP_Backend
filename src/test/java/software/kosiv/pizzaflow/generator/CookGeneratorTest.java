@@ -12,7 +12,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CookGeneratorTests {
+public class CookGeneratorTest {
 
     @Test
     public void testGenerateWithDefaultStates() {
