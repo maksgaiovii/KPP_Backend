@@ -1,8 +1,12 @@
-package software.kosiv.pizzaflow.model;
+package software.kosiv.pizzaflow.model.dish;
+
+import software.kosiv.pizzaflow.model.cook.Cook;
+import software.kosiv.pizzaflow.model.event.DishPreparationEventPublisher;
+import software.kosiv.pizzaflow.model.order.OrderItem;
 
 import java.util.UUID;
 
-public abstract class Dish implements IDishPreparationEventPublisher {
+public abstract class Dish implements DishPreparationEventPublisher {
     private final UUID id;
     private final OrderItem orderItem;
     protected boolean isCompleted;

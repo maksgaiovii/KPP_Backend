@@ -1,6 +1,6 @@
-package software.kosiv.pizzaflow.model;
+package software.kosiv.pizzaflow.model.dish;
 
-import software.kosiv.pizzaflow.model.Pizza.PizzaState;
+import software.kosiv.pizzaflow.model.dish.Pizza.PizzaState;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;

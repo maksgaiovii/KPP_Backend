@@ -1,9 +1,9 @@
 package software.kosiv.pizzaflow.event;
 
 import org.springframework.context.ApplicationEvent;
-import software.kosiv.pizzaflow.model.Cook;
-import software.kosiv.pizzaflow.model.Dish;
-import software.kosiv.pizzaflow.model.DishState;
+import software.kosiv.pizzaflow.model.cook.Cook;
+import software.kosiv.pizzaflow.model.dish.Dish;
+import software.kosiv.pizzaflow.model.dish.DishState;
 
 public class DishPreparationStartedEvent extends ApplicationEvent {
     private final Dish dish;

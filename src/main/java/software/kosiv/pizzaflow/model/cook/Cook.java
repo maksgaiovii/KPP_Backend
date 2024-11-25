@@ -1,7 +1,10 @@
-package software.kosiv.pizzaflow.model;
+package software.kosiv.pizzaflow.model.cook;
 
 import software.kosiv.pizzaflow.exception.BusyCookException;
 import software.kosiv.pizzaflow.exception.PausedCookException;
+import software.kosiv.pizzaflow.model.dish.Dish;
+import software.kosiv.pizzaflow.model.dish.DishState;
+import software.kosiv.pizzaflow.model.order.OrderItem;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -12,7 +15,7 @@ public class Cook {
     private final UUID id = UUID.randomUUID();
     private String name;
     private CookStatus status = CookStatus.FREE;
-    private ICookStrategy strategy;
+    private CookStrategy strategy;
     private final Set<DishState> availableSkills = new HashSet<>();
 
     public Cook(String name) {
@@ -55,8 +58,8 @@ public class Cook {
         this.status = CookStatus.FREE;
         return prevStatus;
     }
-
-    public void setStrategy(ICookStrategy strategy) {
+    
+    public void setStrategy(CookStrategy strategy) {
         this.strategy = strategy;
         this.strategy.setCook(this);
     }

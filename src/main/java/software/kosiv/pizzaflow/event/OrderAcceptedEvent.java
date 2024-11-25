@@ -2,8 +2,8 @@ package software.kosiv.pizzaflow.event;
 
 import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
-import software.kosiv.pizzaflow.model.CashRegister;
-import software.kosiv.pizzaflow.model.Order;
+import software.kosiv.pizzaflow.model.order.Order;
+import software.kosiv.pizzaflow.model.payment.CashRegister;
 
 @Getter
 public class OrderAcceptedEvent extends ApplicationEvent {

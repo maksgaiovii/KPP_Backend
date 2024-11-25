@@ -1,4 +1,7 @@
-package software.kosiv.pizzaflow.model;
+package software.kosiv.pizzaflow.model.menu;
+
+import software.kosiv.pizzaflow.model.dish.Dish;
+import software.kosiv.pizzaflow.model.order.OrderItem;
 
 import java.util.List;
 import java.util.Objects;

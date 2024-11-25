@@ -5,8 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import software.kosiv.pizzaflow.config.SimulationConfig;
 import software.kosiv.pizzaflow.dto.StartConfigDto;
-import software.kosiv.pizzaflow.model.MenuItem;
-import software.kosiv.pizzaflow.service.IConfigService;
+import software.kosiv.pizzaflow.model.menu.MenuItem;
+import software.kosiv.pizzaflow.service.ConfigService;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,9 +15,9 @@ import java.util.Map;
 @RestController
 @RequestMapping("/config")
 public class ConfigController {
-    private final IConfigService simulationConfigService;
-
-    public ConfigController(IConfigService simulationConfigService) {
+    private final ConfigService simulationConfigService;
+    
+    public ConfigController(ConfigService simulationConfigService) {
         this.simulationConfigService = simulationConfigService;
     }
 

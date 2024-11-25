@@ -1,4 +1,6 @@
-package software.kosiv.pizzaflow.model;
+package software.kosiv.pizzaflow.model.payment;
+
+import software.kosiv.pizzaflow.model.customer.Customer;
 
 import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
