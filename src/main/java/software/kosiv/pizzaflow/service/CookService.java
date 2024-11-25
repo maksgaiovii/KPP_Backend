@@ -1,7 +1,5 @@
 package software.kosiv.pizzaflow.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import software.kosiv.pizzaflow.event.CookChangeStateEvent;
@@ -18,7 +16,6 @@ import static software.kosiv.pizzaflow.generator.CookGenerator.generate;
 @Service
 public class CookService implements IDishPreparationEventListener {
     private final ApplicationEventPublisher eventPublisher;
-    private final Logger logger = LoggerFactory.getLogger(CookService.class);
 
     private final ScheduledExecutorService scheduledExecutorService;
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -133,12 +130,6 @@ public class CookService implements IDishPreparationEventListener {
 
     private void processOrderItem(Cook cook, OrderItem orderItem) {
         if(orderItem.tryLockForPreparation()) {
-            logger.info("Cook {} start cooking order item {} with id {} from order {}",
-                    cook.getName(),
-                    orderItem.getMenuItem().getName(),
-                    orderItem.getId(),
-                    orderItem.getOrder().getId());
-
             executorService.execute(() ->
             {
                 assignOrderItemToCook(cook, orderItem);
