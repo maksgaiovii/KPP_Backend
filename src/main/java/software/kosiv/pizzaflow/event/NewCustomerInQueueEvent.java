@@ -2,8 +2,8 @@ package software.kosiv.pizzaflow.event;
 
 import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
-import software.kosiv.pizzaflow.model.CashRegister;
-import software.kosiv.pizzaflow.model.Customer;
+import software.kosiv.pizzaflow.model.customer.Customer;
+import software.kosiv.pizzaflow.model.payment.CashRegister;
 
 @Getter
 public class NewCustomerInQueueEvent extends ApplicationEvent {

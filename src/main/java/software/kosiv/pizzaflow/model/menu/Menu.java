@@ -1,4 +1,4 @@
-package software.kosiv.pizzaflow.model;
+package software.kosiv.pizzaflow.model.menu;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -2,7 +2,7 @@ package software.kosiv.pizzaflow.service;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import software.kosiv.pizzaflow.model.Order;
+import software.kosiv.pizzaflow.model.order.Order;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package software.kosiv.pizzaflow.model;
+package software.kosiv.pizzaflow.model.dish;
 
 public interface DishState {
     String getStateName();

@@ -1,6 +1,9 @@
-package software.kosiv.pizzaflow.model;
+package software.kosiv.pizzaflow.model.cook;
 
-public class WholeDishStrategy implements ICookStrategy {
+import software.kosiv.pizzaflow.model.dish.Dish;
+import software.kosiv.pizzaflow.model.dish.DishState;
+
+public class WholeDishStrategy implements CookStrategy {
     private Cook cook;
 
     @Override
@@ -18,7 +21,7 @@ public class WholeDishStrategy implements ICookStrategy {
     }
 
     @Override
-    public ICookStrategy clone() {
+    public CookStrategy clone() {
         return new WholeDishStrategy();
     }
 }

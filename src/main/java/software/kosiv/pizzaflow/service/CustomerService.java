@@ -5,7 +5,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import software.kosiv.pizzaflow.event.CustomerCreatedEvent;
 import software.kosiv.pizzaflow.generator.CustomerGenerator;
-import software.kosiv.pizzaflow.model.Customer;
+import software.kosiv.pizzaflow.model.customer.Customer;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;

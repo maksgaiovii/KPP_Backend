@@ -1,4 +1,7 @@
-package software.kosiv.pizzaflow.model;
+package software.kosiv.pizzaflow.model.order;
+
+import software.kosiv.pizzaflow.model.dish.Dish;
+import software.kosiv.pizzaflow.model.menu.MenuItem;
 
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -15,7 +18,7 @@ public class OrderItem {
         this.menuItem = menuItem;
     }
     
-    protected void complete() {
+    public void complete() {
         order.completeOrderItem(this);
     }
     

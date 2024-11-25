@@ -4,10 +4,10 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 import software.kosiv.pizzaflow.config.SimulationConfig;
 import software.kosiv.pizzaflow.dto.StartConfigDto;
-import software.kosiv.pizzaflow.model.ICookStrategy;
-import software.kosiv.pizzaflow.model.MenuItem;
-import software.kosiv.pizzaflow.model.OneStepStrategy;
-import software.kosiv.pizzaflow.model.WholeDishStrategy;
+import software.kosiv.pizzaflow.model.cook.CookStrategy;
+import software.kosiv.pizzaflow.model.cook.OneStepStrategy;
+import software.kosiv.pizzaflow.model.cook.WholeDishStrategy;
+import software.kosiv.pizzaflow.model.menu.MenuItem;
 
 import java.util.List;
 
@@ -54,8 +54,8 @@ public class ConfigService implements IConfigService {
                 cookStrategy,CustomerGenerationStrategy.MEDIUM);
         return config;
     }
-
-    private ICookStrategy getStrategy(StartConfigDto inputDto) {
+    
+    private CookStrategy getStrategy(StartConfigDto inputDto) {
         return inputDto.specializedCooksMode() ? new WholeDishStrategy() : new OneStepStrategy();
     }
 }

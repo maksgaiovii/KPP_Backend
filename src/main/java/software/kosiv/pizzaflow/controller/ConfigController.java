@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import software.kosiv.pizzaflow.config.SimulationConfig;
 import software.kosiv.pizzaflow.dto.StartConfigDto;
-import software.kosiv.pizzaflow.model.MenuItem;
+import software.kosiv.pizzaflow.model.menu.MenuItem;
 import software.kosiv.pizzaflow.service.IConfigService;
 
 import java.util.HashMap;

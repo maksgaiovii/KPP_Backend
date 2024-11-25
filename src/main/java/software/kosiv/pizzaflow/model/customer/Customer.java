@@ -1,4 +1,6 @@
-package software.kosiv.pizzaflow.model;
+package software.kosiv.pizzaflow.model.customer;
+
+import software.kosiv.pizzaflow.model.order.Order;
 
 import java.util.Objects;
 import java.util.UUID;

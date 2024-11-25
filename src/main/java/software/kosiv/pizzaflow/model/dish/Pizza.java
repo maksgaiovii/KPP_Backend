@@ -1,7 +1,10 @@
-package software.kosiv.pizzaflow.model;
+package software.kosiv.pizzaflow.model.dish;
 
 import software.kosiv.pizzaflow.event.DishPreparationCompletedEvent;
 import software.kosiv.pizzaflow.event.DishPreparationStartedEvent;
+import software.kosiv.pizzaflow.model.cook.Cook;
+import software.kosiv.pizzaflow.model.event.DishPreparationEventListener;
+import software.kosiv.pizzaflow.model.order.OrderItem;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -9,11 +12,11 @@ import java.util.List;
 import java.util.Queue;
 
 public class Pizza extends Dish {
-    private final List<IDishPreparationEventListener> listeners = new ArrayList<>();
+    private final List<DishPreparationEventListener> listeners = new ArrayList<>();
     private final PizzaPreparationStrategy preparationStrategy;
     private PizzaState state;
     
-    public Pizza(OrderItem  orderItem,List<PizzaPreparationStep> steps) {
+    public Pizza(OrderItem orderItem, List<PizzaPreparationStep> steps) {
         super(orderItem);
         this.state = PizzaState.INITIAL;
         this.preparationStrategy = new PizzaPreparationStrategy(steps);
@@ -43,25 +46,25 @@ public class Pizza extends Dish {
     }
 
     @Override
-    public void subscribe(IDishPreparationEventListener listener) {
+    public void subscribe(DishPreparationEventListener listener) {
         this.listeners.add(listener);
     }
 
     @Override
-    public void unsubscribe(IDishPreparationEventListener listener){
+    public void unsubscribe(DishPreparationEventListener listener) {
         this.listeners.remove(listener);
     }
 
     @Override
     public void notifyPreparationStart(DishPreparationStartedEvent event){
-        for (IDishPreparationEventListener l : listeners) {
+        for (DishPreparationEventListener l : listeners) {
             l.onDishPreparationStartedEvent(event);
         }
     }
 
     @Override
     public void notifyPreparationComplete(DishPreparationCompletedEvent event){
-        for (IDishPreparationEventListener l : listeners) {
+        for (DishPreparationEventListener l : listeners) {
             l.onDishPreparationCompletedEvent(event);
         }
     }

@@ -2,7 +2,7 @@ package software.kosiv.pizzaflow.service;
 
 import software.kosiv.pizzaflow.config.SimulationConfig;
 import software.kosiv.pizzaflow.dto.StartConfigDto;
-import software.kosiv.pizzaflow.model.MenuItem;
+import software.kosiv.pizzaflow.model.menu.MenuItem;
 
 import java.util.List;
 

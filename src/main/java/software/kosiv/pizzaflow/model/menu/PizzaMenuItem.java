@@ -1,6 +1,9 @@
-package software.kosiv.pizzaflow.model;
+package software.kosiv.pizzaflow.model.menu;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import software.kosiv.pizzaflow.model.dish.Pizza;
+import software.kosiv.pizzaflow.model.dish.PizzaPreparationStep;
+import software.kosiv.pizzaflow.model.order.OrderItem;
 
 import java.util.List;
 

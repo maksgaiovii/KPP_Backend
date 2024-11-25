@@ -1,6 +1,9 @@
-package software.kosiv.pizzaflow.model;
+package software.kosiv.pizzaflow.model.cook;
 
-public class OneStepStrategy implements ICookStrategy {
+import software.kosiv.pizzaflow.model.dish.Dish;
+import software.kosiv.pizzaflow.model.dish.DishState;
+
+public class OneStepStrategy implements CookStrategy {
     private Cook cook;
 
     @Override
@@ -19,7 +22,7 @@ public class OneStepStrategy implements ICookStrategy {
     }
 
     @Override
-    public ICookStrategy clone() {
+    public CookStrategy clone() {
         return new OneStepStrategy();
     }
 }

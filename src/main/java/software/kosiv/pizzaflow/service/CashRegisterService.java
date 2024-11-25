@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 import software.kosiv.pizzaflow.event.NewCustomerInQueueEvent;
 import software.kosiv.pizzaflow.event.OrderAcceptedEvent;
 import software.kosiv.pizzaflow.event.OrderCompletedEvent;
-import software.kosiv.pizzaflow.model.CashRegister;
-import software.kosiv.pizzaflow.model.Customer;
-import software.kosiv.pizzaflow.model.Order;
+import software.kosiv.pizzaflow.model.customer.Customer;
+import software.kosiv.pizzaflow.model.order.Order;
+import software.kosiv.pizzaflow.model.payment.CashRegister;
 
 import java.util.ArrayList;
 import java.util.Comparator;

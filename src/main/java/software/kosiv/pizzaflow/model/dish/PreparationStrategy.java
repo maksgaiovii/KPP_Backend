@@ -1,4 +1,4 @@
-package software.kosiv.pizzaflow.model;
+package software.kosiv.pizzaflow.model.dish;
 
 public interface PreparationStrategy<T extends DishState> {
     T toNextState();

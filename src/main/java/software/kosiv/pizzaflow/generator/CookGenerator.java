@@ -1,9 +1,9 @@
 package software.kosiv.pizzaflow.generator;
 
 import net.datafaker.Faker;
-import software.kosiv.pizzaflow.model.Cook;
-import software.kosiv.pizzaflow.model.DishState;
-import software.kosiv.pizzaflow.model.Pizza;
+import software.kosiv.pizzaflow.model.cook.Cook;
+import software.kosiv.pizzaflow.model.dish.DishState;
+import software.kosiv.pizzaflow.model.dish.Pizza;
 
 import java.util.ArrayList;
 import java.util.List;

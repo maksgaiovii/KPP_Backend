@@ -1,8 +1,8 @@
 package software.kosiv.pizzaflow.event;
 
 import org.springframework.context.ApplicationEvent;
-import software.kosiv.pizzaflow.model.Cook;
-import software.kosiv.pizzaflow.model.CookStatus;
+import software.kosiv.pizzaflow.model.cook.Cook;
+import software.kosiv.pizzaflow.model.cook.CookStatus;
 
 public class CookChangeStateEvent extends ApplicationEvent {
     private final Cook cook;

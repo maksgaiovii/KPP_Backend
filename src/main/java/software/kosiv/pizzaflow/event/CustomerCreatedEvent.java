@@ -2,7 +2,7 @@ package software.kosiv.pizzaflow.event;
 
 import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
-import software.kosiv.pizzaflow.model.Customer;
+import software.kosiv.pizzaflow.model.customer.Customer;
 
 @Getter
 public class CustomerCreatedEvent extends ApplicationEvent {

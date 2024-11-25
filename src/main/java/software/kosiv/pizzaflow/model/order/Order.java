@@ -1,4 +1,8 @@
-package software.kosiv.pizzaflow.model;
+package software.kosiv.pizzaflow.model.order;
+
+import software.kosiv.pizzaflow.model.customer.Customer;
+import software.kosiv.pizzaflow.model.menu.MenuItem;
+import software.kosiv.pizzaflow.model.payment.CashRegister;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

@@ -1,7 +1,10 @@
 package software.kosiv.pizzaflow.generator;
 
 import net.datafaker.Faker;
-import software.kosiv.pizzaflow.model.*;
+import software.kosiv.pizzaflow.model.customer.Customer;
+import software.kosiv.pizzaflow.model.menu.Menu;
+import software.kosiv.pizzaflow.model.menu.MenuItem;
+import software.kosiv.pizzaflow.model.order.Order;
 
 import java.util.ArrayList;
 import java.util.List;

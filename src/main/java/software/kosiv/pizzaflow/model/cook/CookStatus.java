@@ -1,4 +1,4 @@
-package software.kosiv.pizzaflow.model;
+package software.kosiv.pizzaflow.model.cook;
 
 public enum CookStatus {
     FREE,

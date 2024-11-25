@@ -5,7 +5,13 @@ import org.springframework.stereotype.Service;
 import software.kosiv.pizzaflow.event.CookChangeStateEvent;
 import software.kosiv.pizzaflow.event.DishPreparationCompletedEvent;
 import software.kosiv.pizzaflow.event.DishPreparationStartedEvent;
-import software.kosiv.pizzaflow.model.*;
+import software.kosiv.pizzaflow.model.cook.Cook;
+import software.kosiv.pizzaflow.model.cook.CookStatus;
+import software.kosiv.pizzaflow.model.cook.CookStrategy;
+import software.kosiv.pizzaflow.model.dish.Pizza;
+import software.kosiv.pizzaflow.model.event.DishPreparationEventListener;
+import software.kosiv.pizzaflow.model.order.Order;
+import software.kosiv.pizzaflow.model.order.OrderItem;
 
 import java.util.*;
 import java.util.concurrent.*;
@@ -14,7 +20,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static software.kosiv.pizzaflow.generator.CookGenerator.generate;
 
 @Service
-public class CookService implements IDishPreparationEventListener {
+public class CookService implements DishPreparationEventListener {
     private final ApplicationEventPublisher eventPublisher;
 
     private final ScheduledExecutorService scheduledExecutorService;
@@ -37,7 +43,7 @@ public class CookService implements IDishPreparationEventListener {
     }
 
     public void setCookCount(int count) {
-        this.cooks = List.copyOf(generate(count, Arrays.asList( Pizza.PizzaState.values())));
+        this.cooks = List.copyOf(generate(count, Arrays.asList(Pizza.PizzaState.values())));
         this.executorService = Executors.newFixedThreadPool(count);
     }
 
@@ -75,8 +81,8 @@ public class CookService implements IDishPreparationEventListener {
             eventPublisher.publishEvent(new CookChangeStateEvent(this, cook, CookStatus.PAUSED));
         }
     }
-
-    public void setCookStrategy(ICookStrategy strategy) {
+    
+    public void setCookStrategy(CookStrategy strategy) {
         for (Cook cook : cooks) {
             cook.setStrategy(strategy.clone());
         }
