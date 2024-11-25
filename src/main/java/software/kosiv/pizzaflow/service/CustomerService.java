@@ -2,7 +2,7 @@ package software.kosiv.pizzaflow.service;
 
 import software.kosiv.pizzaflow.service.impl.CustomerGenerationFrequency;
 
-public interface ICustomerService {
+public interface CustomerService {
     void createCustomer();
     
     void stop();

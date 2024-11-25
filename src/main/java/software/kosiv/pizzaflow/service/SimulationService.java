@@ -4,7 +4,7 @@ import software.kosiv.pizzaflow.config.SimulationConfig;
 
 import java.util.UUID;
 
-public interface ISimulationService {
+public interface SimulationService {
 
     boolean start(SimulationConfig simulationConfig) throws IllegalStateException;
     boolean resume() throws IllegalStateException;

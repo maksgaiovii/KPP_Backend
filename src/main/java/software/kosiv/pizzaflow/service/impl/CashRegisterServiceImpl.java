@@ -10,17 +10,17 @@ import software.kosiv.pizzaflow.event.OrderCompletedEvent;
 import software.kosiv.pizzaflow.model.customer.Customer;
 import software.kosiv.pizzaflow.model.order.Order;
 import software.kosiv.pizzaflow.model.payment.CashRegister;
-import software.kosiv.pizzaflow.service.ICashRegisterService;
-import software.kosiv.pizzaflow.service.IOrderService;
+import software.kosiv.pizzaflow.service.CashRegisterService;
+import software.kosiv.pizzaflow.service.OrderService;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 @Service
-public class CashRegisterServiceImpl implements ICashRegisterService {
+public class CashRegisterServiceImpl implements CashRegisterService {
     private final ApplicationEventPublisher eventPublisher;
-    private IOrderService orderService;
+    private OrderService orderService;
     private List<CashRegister> cashRegisters = new ArrayList<>();
     
     public CashRegisterServiceImpl(ApplicationEventPublisher eventPublisher) {
@@ -67,7 +67,7 @@ public class CashRegisterServiceImpl implements ICashRegisterService {
     }
     
     @Autowired
-    public void setOrderService(@Lazy IOrderService orderService) { // circular dependency fix
+    public void setOrderService(@Lazy OrderService orderService) { // circular dependency fix
         this.orderService = orderService;
     }
     

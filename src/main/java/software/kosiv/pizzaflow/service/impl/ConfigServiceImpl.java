@@ -8,17 +8,17 @@ import software.kosiv.pizzaflow.model.cook.CookStrategy;
 import software.kosiv.pizzaflow.model.cook.OneStepStrategy;
 import software.kosiv.pizzaflow.model.cook.WholeDishStrategy;
 import software.kosiv.pizzaflow.model.menu.MenuItem;
-import software.kosiv.pizzaflow.service.IConfigService;
-import software.kosiv.pizzaflow.service.IMenuService;
+import software.kosiv.pizzaflow.service.ConfigService;
+import software.kosiv.pizzaflow.service.MenuService;
 
 import java.util.List;
 
 @Service
-public class ConfigServiceImpl implements IConfigService {
+public class ConfigServiceImpl implements ConfigService {
     private final SimulationConfig pizzeriaConfig;
-    private final IMenuService menuService;
+    private final MenuService menuService;
     
-    public ConfigServiceImpl(SimulationConfig pizzeriaConfig, IMenuService menuService) {
+    public ConfigServiceImpl(SimulationConfig pizzeriaConfig, MenuService menuService) {
         this.pizzeriaConfig = pizzeriaConfig;
         this.menuService = menuService;
     }

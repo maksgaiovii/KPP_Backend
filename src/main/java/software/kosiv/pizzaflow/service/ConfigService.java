@@ -6,7 +6,7 @@ import software.kosiv.pizzaflow.model.menu.MenuItem;
 
 import java.util.List;
 
-public interface IConfigService {
+public interface ConfigService {
     void initDefaultConfig();
     
     SimulationConfig mapToSimulationConfig(StartConfigDto inputDto);

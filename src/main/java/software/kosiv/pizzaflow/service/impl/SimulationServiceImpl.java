@@ -11,17 +11,17 @@ import java.util.UUID;
 @Getter
 @Setter
 @Service
-public class SimulationServiceImpl implements ISimulationService {
+public class SimulationServiceImpl implements SimulationService {
     public SimulationStatus simulationStatus = SimulationStatus.INITIAL;
-    private ICookService cookService;
-    private ICashRegisterService cashRegisterService;
-    private ICustomerService customerService;
-    private IMenuService menuService;
+    private CookService cookService;
+    private CashRegisterService cashRegisterService;
+    private CustomerService customerService;
+    private MenuService menuService;
     
-    public SimulationServiceImpl(ICookService cookService,
-                                 ICashRegisterService cashRegisterService,
-                                 IMenuService menuService,
-                                 ICustomerService customerService) {
+    public SimulationServiceImpl(CookService cookService,
+                                 CashRegisterService cashRegisterService,
+                                 MenuService menuService,
+                                 CustomerService customerService) {
         this.cookService = cookService;
         this.cashRegisterService = cashRegisterService;
         this.menuService = menuService;

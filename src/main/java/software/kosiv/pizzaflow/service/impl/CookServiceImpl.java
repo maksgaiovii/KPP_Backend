@@ -12,7 +12,7 @@ import software.kosiv.pizzaflow.model.dish.Pizza;
 import software.kosiv.pizzaflow.model.event.DishPreparationEventListener;
 import software.kosiv.pizzaflow.model.order.Order;
 import software.kosiv.pizzaflow.model.order.OrderItem;
-import software.kosiv.pizzaflow.service.ICookService;
+import software.kosiv.pizzaflow.service.CookService;
 
 import java.util.*;
 import java.util.concurrent.*;
@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static software.kosiv.pizzaflow.generator.CookGenerator.generate;
 
 @Service
-public class CookServiceImpl implements DishPreparationEventListener, ICookService {
+public class CookServiceImpl implements DishPreparationEventListener, CookService {
     private final ApplicationEventPublisher eventPublisher;
 
     private final ScheduledExecutorService scheduledExecutorService;

@@ -5,7 +5,7 @@ import software.kosiv.pizzaflow.model.order.Order;
 
 import java.util.UUID;
 
-public interface ICookService {
+public interface CookService {
     void acceptOrder(Order order);
     
     void stop();

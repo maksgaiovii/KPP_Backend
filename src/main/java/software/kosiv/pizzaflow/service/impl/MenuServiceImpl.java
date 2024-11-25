@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import software.kosiv.pizzaflow.model.menu.Menu;
 import software.kosiv.pizzaflow.model.menu.MenuItem;
 import software.kosiv.pizzaflow.model.menu.PizzaMenuItem;
-import software.kosiv.pizzaflow.service.IMenuService;
+import software.kosiv.pizzaflow.service.MenuService;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class MenuServiceImpl implements IMenuService {
+public class MenuServiceImpl implements MenuService {
     private final Menu menu;
     private ObjectMapper objectMapper = new ObjectMapper();
     InputStream inputStream = getClass().getClassLoader().getResourceAsStream("menu.json");

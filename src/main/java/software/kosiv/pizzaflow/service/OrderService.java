@@ -4,7 +4,7 @@ import software.kosiv.pizzaflow.model.order.Order;
 
 import java.util.List;
 
-public interface IOrderService {
+public interface OrderService {
     void processOrder(Order order);
     
     List<Order> getActiveOrders();
