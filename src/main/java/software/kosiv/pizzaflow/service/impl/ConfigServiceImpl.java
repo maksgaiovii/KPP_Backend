@@ -1,4 +1,4 @@
-package software.kosiv.pizzaflow.service;
+package software.kosiv.pizzaflow.service.impl;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
@@ -8,15 +8,17 @@ import software.kosiv.pizzaflow.model.cook.CookStrategy;
 import software.kosiv.pizzaflow.model.cook.OneStepStrategy;
 import software.kosiv.pizzaflow.model.cook.WholeDishStrategy;
 import software.kosiv.pizzaflow.model.menu.MenuItem;
+import software.kosiv.pizzaflow.service.IConfigService;
+import software.kosiv.pizzaflow.service.IMenuService;
 
 import java.util.List;
 
 @Service
-public class ConfigService implements IConfigService {
+public class ConfigServiceImpl implements IConfigService {
     private final SimulationConfig pizzeriaConfig;
-    private final MenuService menuService;
-
-    public ConfigService(SimulationConfig pizzeriaConfig, MenuService menuService) {
+    private final IMenuService menuService;
+    
+    public ConfigServiceImpl(SimulationConfig pizzeriaConfig, IMenuService menuService) {
         this.pizzeriaConfig = pizzeriaConfig;
         this.menuService = menuService;
     }
@@ -27,7 +29,7 @@ public class ConfigService implements IConfigService {
                 3,
                 2,
                 new WholeDishStrategy(),
-                CustomerGenerationStrategy.MEDIUM
+                CustomerGenerationFrequency.MEDIUM
         );
     }
 
@@ -51,7 +53,7 @@ public class ConfigService implements IConfigService {
         var cookStrategy = getStrategy(inputDto);
         var config = new SimulationConfig();
         config.update(inputDto.cooksNumber(), inputDto.cashRegistersNumber(),
-                cookStrategy,CustomerGenerationStrategy.MEDIUM);
+                      cookStrategy, CustomerGenerationFrequency.MEDIUM);
         return config;
     }
     

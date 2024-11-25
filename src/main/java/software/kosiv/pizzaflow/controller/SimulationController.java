@@ -3,9 +3,9 @@ package software.kosiv.pizzaflow.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import software.kosiv.pizzaflow.service.ConfigService;
+import software.kosiv.pizzaflow.service.IConfigService;
 import software.kosiv.pizzaflow.service.ISimulationService;
-import software.kosiv.pizzaflow.service.SimulationService;
+import software.kosiv.pizzaflow.service.impl.SimulationServiceImpl;
 
 import java.util.Map;
 import java.util.UUID;
@@ -14,9 +14,9 @@ import java.util.UUID;
 @RequestMapping("/simulation")
 public class SimulationController {
     private final ISimulationService simulationService;
-    private final ConfigService configService;
-
-    public SimulationController(SimulationService simulationService , ConfigService configService) {
+    private final IConfigService configService;
+    
+    public SimulationController(SimulationServiceImpl simulationService, IConfigService configService) {
         this.simulationService = simulationService;
         this.configService = configService;
         configService.initDefaultConfig();

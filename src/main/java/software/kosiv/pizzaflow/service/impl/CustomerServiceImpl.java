@@ -1,4 +1,4 @@
-package software.kosiv.pizzaflow.service;
+package software.kosiv.pizzaflow.service.impl;
 
 import lombok.Getter;
 import org.springframework.context.ApplicationEventPublisher;
@@ -6,48 +6,56 @@ import org.springframework.stereotype.Service;
 import software.kosiv.pizzaflow.event.CustomerCreatedEvent;
 import software.kosiv.pizzaflow.generator.CustomerGenerator;
 import software.kosiv.pizzaflow.model.customer.Customer;
+import software.kosiv.pizzaflow.service.ICashRegisterService;
+import software.kosiv.pizzaflow.service.ICustomerService;
+import software.kosiv.pizzaflow.service.IMenuService;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 @Service
-public class CustomerService {
-    private final CashRegisterService cashRegisterService;
-    private final MenuService menuService;
+public class CustomerServiceImpl implements ICustomerService {
+    private final ICashRegisterService cashRegisterService;
+    private final IMenuService menuService;
     private final ApplicationEventPublisher eventPublisher;
     private final CustomerGenerator generator = new CustomerGenerator();
     private ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
     @Getter
-    private CustomerGenerationStrategy strategy = CustomerGenerationStrategy.MEDIUM;
+    private CustomerGenerationFrequency strategy = CustomerGenerationFrequency.MEDIUM;
     
-    public CustomerService(CashRegisterService cashRegisterService,
-                           MenuService menuService,
+    public CustomerServiceImpl(ICashRegisterService cashRegisterService,
+                               IMenuService menuService,
                            ApplicationEventPublisher eventPublisher) {
         this.cashRegisterService = cashRegisterService;
         this.menuService = menuService;
         this.eventPublisher = eventPublisher;
     }
     
+    @Override
     public void createCustomer() {
         Customer customer = generator.generateCustomerWithOrder(menuService.getMenu());
         publishCustomerCreatedEvent(customer);
         cashRegisterService.addCustomer(customer);
     }
-
+    
+    @Override
     public void stop() {
         executorService.shutdown();
     }
-
+    
+    @Override
     public void resume() {
         setExecutorService();
     }
-
+    
+    @Override
     public void terminate() {
         stop();
     }
-
-    public void setStrategy(CustomerGenerationStrategy strategy) {
+    
+    @Override
+    public void setStrategy(CustomerGenerationFrequency strategy) {
         this.strategy = strategy;
         setExecutorService();
     }

@@ -1,13 +1,13 @@
-package software.kosiv.pizzaflow.service;
+package software.kosiv.pizzaflow.service.impl;
 
-public enum CustomerGenerationStrategy {
+public enum CustomerGenerationFrequency {
     FAST(10),
     MEDIUM(20),
     SLOW(30);
     
     private final int generationFrequencyInSeconds;
     
-    CustomerGenerationStrategy(int generationFrequencyInSeconds) {
+    CustomerGenerationFrequency(int generationFrequencyInSeconds) {
         this.generationFrequencyInSeconds = generationFrequencyInSeconds;
     }
     

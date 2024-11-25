@@ -1,4 +1,4 @@
-package software.kosiv.pizzaflow.service;
+package software.kosiv.pizzaflow.service.impl;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -12,6 +12,7 @@ import software.kosiv.pizzaflow.model.dish.Pizza;
 import software.kosiv.pizzaflow.model.event.DishPreparationEventListener;
 import software.kosiv.pizzaflow.model.order.Order;
 import software.kosiv.pizzaflow.model.order.OrderItem;
+import software.kosiv.pizzaflow.service.ICookService;
 
 import java.util.*;
 import java.util.concurrent.*;
@@ -20,7 +21,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static software.kosiv.pizzaflow.generator.CookGenerator.generate;
 
 @Service
-public class CookService implements DishPreparationEventListener {
+public class CookServiceImpl implements DishPreparationEventListener, ICookService {
     private final ApplicationEventPublisher eventPublisher;
 
     private final ScheduledExecutorService scheduledExecutorService;
@@ -29,40 +30,40 @@ public class CookService implements DishPreparationEventListener {
 
     private final Deque<Order> orderDeque;
     private List<Cook> cooks = new ArrayList<>();
-
-    public CookService(ApplicationEventPublisher eventPublisher) {
+    
+    public CookServiceImpl(ApplicationEventPublisher eventPublisher) {
         this.eventPublisher = eventPublisher;
         this.orderDeque = new LinkedBlockingDeque<>(1000);
         this.scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
         scheduledExecutorService.scheduleAtFixedRate(this::checkWaitingQueue, 0, 1, TimeUnit.SECONDS);
     }
-
+    
+    @Override
     public void acceptOrder(Order order) {
         order.getOrderItems().forEach(orderItem -> orderItem.getDish().subscribe(this));
         orderDeque.add(order);
     }
-
-    public void setCookCount(int count) {
-        this.cooks = List.copyOf(generate(count, Arrays.asList(Pizza.PizzaState.values())));
-        this.executorService = Executors.newFixedThreadPool(count);
-    }
-
+    
+    @Override
     public void stop() {
         isPaused.set(true);
         cooks.forEach(Cook::setPaused);
     }
-
+    
+    @Override
     public void resume() {
         isPaused.set(false);
         cooks.forEach(Cook::setFree);
     }
-
+    
+    @Override
     public void terminate() {
         stop();
         scheduledExecutorService.shutdown();
         executorService.shutdown();
     }
-
+    
+    @Override
     public void stopCook(UUID id) {
         Cook cook = findCookById(id);
         if (cook == null) {
@@ -73,7 +74,8 @@ public class CookService implements DishPreparationEventListener {
         cook.setPaused();
         eventPublisher.publishEvent(new CookChangeStateEvent(this, cook, previousStatus));
     }
-
+    
+    @Override
     public void resumeCook(UUID id) {
         Cook cook = findCookById(id);
         if (cook != null) {
@@ -82,6 +84,13 @@ public class CookService implements DishPreparationEventListener {
         }
     }
     
+    @Override
+    public void setCookCount(int count) {
+        this.cooks = List.copyOf(generate(count, Arrays.asList(Pizza.PizzaState.values())));
+        this.executorService = Executors.newFixedThreadPool(count);
+    }
+    
+    @Override
     public void setCookStrategy(CookStrategy strategy) {
         for (Cook cook : cooks) {
             cook.setStrategy(strategy.clone());

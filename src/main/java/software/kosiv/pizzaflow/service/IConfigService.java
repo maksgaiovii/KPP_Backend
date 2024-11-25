@@ -7,9 +7,13 @@ import software.kosiv.pizzaflow.model.menu.MenuItem;
 import java.util.List;
 
 public interface IConfigService {
-    List<MenuItem> getMenu();
-    SimulationConfig getSimulationConfig();
-    void setSimulationConfig(SimulationConfig config);
-
+    void initDefaultConfig();
+    
     SimulationConfig mapToSimulationConfig(StartConfigDto inputDto);
+    
+    List<MenuItem> getMenu();
+    
+    SimulationConfig getSimulationConfig();
+    
+    void setSimulationConfig(SimulationConfig config);
 }

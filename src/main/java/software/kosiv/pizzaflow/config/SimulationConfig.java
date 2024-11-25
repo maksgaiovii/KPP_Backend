@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 import software.kosiv.pizzaflow.model.cook.CookStrategy;
-import software.kosiv.pizzaflow.service.CustomerGenerationStrategy;
+import software.kosiv.pizzaflow.service.impl.CustomerGenerationFrequency;
 
 @Component
 @Getter
@@ -13,22 +13,22 @@ public class SimulationConfig {
     private int cooksNumber;
     private int cashRegistersNumber;
     private CookStrategy cookStrategy;
-    private CustomerGenerationStrategy customerGenerationStrategy;
+    private CustomerGenerationFrequency customerGenerationFrequency;
 
     public void update(SimulationConfig config){
         this.cooksNumber = config.cooksNumber;
         this.cashRegistersNumber = config.cashRegistersNumber;
         this.cookStrategy = config.cookStrategy;
-        this.customerGenerationStrategy = config.customerGenerationStrategy;
+        this.customerGenerationFrequency = config.customerGenerationFrequency;
     }
     
     public void update(int cooksNumber,
                        int cashRegistersNumber,
                        CookStrategy cookStrategy,
-                       CustomerGenerationStrategy customerGenerationStrategy) {
+                       CustomerGenerationFrequency customerGenerationFrequency) {
         this.cooksNumber = cooksNumber;
         this.cashRegistersNumber = cashRegistersNumber;
         this.cookStrategy = cookStrategy;
-        this.customerGenerationStrategy = customerGenerationStrategy;
+        this.customerGenerationFrequency = customerGenerationFrequency;
     }
 }

@@ -1,4 +1,4 @@
-package software.kosiv.pizzaflow.service;
+package software.kosiv.pizzaflow.service.impl;
 
 public enum SimulationStatus {
     INITIAL,

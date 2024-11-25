@@ -1,24 +1,28 @@
-package software.kosiv.pizzaflow.service;
+package software.kosiv.pizzaflow.service.impl;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import software.kosiv.pizzaflow.model.order.Order;
+import software.kosiv.pizzaflow.service.ICashRegisterService;
+import software.kosiv.pizzaflow.service.ICookService;
+import software.kosiv.pizzaflow.service.IOrderService;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Service
-public class OrderService {
-    private final CookService cookService;
-    private final CashRegisterService cashRegisterService;
+public class OrderServiceImpl implements IOrderService {
+    private final ICookService cookService;
+    private final ICashRegisterService cashRegisterService;
     private final List<Order> activeOrders = new ArrayList<>();
     
-    public OrderService(CookService cookService, CashRegisterService cashRegisterService) {
+    public OrderServiceImpl(ICookService cookService, ICashRegisterService cashRegisterService) {
         this.cookService = cookService;
         this.cashRegisterService = cashRegisterService;
     }
     
+    @Override
     public void processOrder(Order order) {
         activeOrders.add(order);
         cookService.acceptOrder(order);
@@ -37,6 +41,7 @@ public class OrderService {
         activeOrders.removeAll(completedOrders);
     }
     
+    @Override
     public List<Order> getActiveOrders() {
         return activeOrders;
     }

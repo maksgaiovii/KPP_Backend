@@ -1,22 +1,27 @@
-package software.kosiv.pizzaflow.service;
+package software.kosiv.pizzaflow.service.impl;
 
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
 import software.kosiv.pizzaflow.config.SimulationConfig;
+import software.kosiv.pizzaflow.service.*;
+
 import java.util.UUID;
 
 @Getter
 @Setter
 @Service
-public class SimulationService implements ISimulationService {
+public class SimulationServiceImpl implements ISimulationService {
     public SimulationStatus simulationStatus = SimulationStatus.INITIAL;
-    private CookService cookService;
-    private CashRegisterService cashRegisterService;
-    private CustomerService customerService;
-    private MenuService menuService;
-
-    public SimulationService(CookService cookService, CashRegisterService cashRegisterService, MenuService menuService, CustomerService customerService) {
+    private ICookService cookService;
+    private ICashRegisterService cashRegisterService;
+    private ICustomerService customerService;
+    private IMenuService menuService;
+    
+    public SimulationServiceImpl(ICookService cookService,
+                                 ICashRegisterService cashRegisterService,
+                                 IMenuService menuService,
+                                 ICustomerService customerService) {
         this.cookService = cookService;
         this.cashRegisterService = cashRegisterService;
         this.menuService = menuService;
@@ -32,7 +37,7 @@ public class SimulationService implements ISimulationService {
         cookService.setCookCount(simulationConfig.getCooksNumber());
         cookService.setCookStrategy(simulationConfig.getCookStrategy());
         cashRegisterService.setCashRegistersCount(simulationConfig.getCashRegistersNumber());
-        customerService.setStrategy(simulationConfig.getCustomerGenerationStrategy());
+        customerService.setStrategy(simulationConfig.getCustomerGenerationFrequency());
 
         simulationStatus = SimulationStatus.RUNNING;
         return true;

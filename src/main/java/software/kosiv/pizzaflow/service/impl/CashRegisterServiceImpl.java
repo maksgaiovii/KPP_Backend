@@ -1,4 +1,4 @@
-package software.kosiv.pizzaflow.service;
+package software.kosiv.pizzaflow.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -10,21 +10,24 @@ import software.kosiv.pizzaflow.event.OrderCompletedEvent;
 import software.kosiv.pizzaflow.model.customer.Customer;
 import software.kosiv.pizzaflow.model.order.Order;
 import software.kosiv.pizzaflow.model.payment.CashRegister;
+import software.kosiv.pizzaflow.service.ICashRegisterService;
+import software.kosiv.pizzaflow.service.IOrderService;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 @Service
-public class CashRegisterService {
+public class CashRegisterServiceImpl implements ICashRegisterService {
     private final ApplicationEventPublisher eventPublisher;
-    private OrderService orderService;
+    private IOrderService orderService;
     private List<CashRegister> cashRegisters = new ArrayList<>();
     
-    public CashRegisterService(ApplicationEventPublisher eventPublisher) {
+    public CashRegisterServiceImpl(ApplicationEventPublisher eventPublisher) {
         this.eventPublisher = eventPublisher;
     }
     
+    @Override
     public void addCustomer(Customer customer) {
         var cashRegister = cashRegisters.stream()
                                         .min(Comparator.comparing(CashRegister::queueSize))
@@ -41,6 +44,7 @@ public class CashRegisterService {
         eventPublisher.publishEvent(event);
     }
     
+    @Override
     public void closeOrder(Order order) {
         var cashRegister = order.getCashRegister();
         cashRegister.removeCustomer(order.getCustomer());
@@ -63,10 +67,11 @@ public class CashRegisterService {
     }
     
     @Autowired
-    public void setOrderService(@Lazy OrderService orderService) { // circular dependency fix
+    public void setOrderService(@Lazy IOrderService orderService) { // circular dependency fix
         this.orderService = orderService;
     }
     
+    @Override
     public void setCashRegistersCount(int count) {
         cashRegisters = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
