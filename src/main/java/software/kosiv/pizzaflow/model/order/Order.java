@@ -61,7 +61,7 @@ public class Order {
     
     public void setCashRegister(CashRegister cashRegister) {
         if(this.cashRegister != null) {
-            throw new IllegalStateException(); // fixme: change exception class
+            throw new IllegalStateException();
         }
         this.cashRegister = cashRegister;
     }

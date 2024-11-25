@@ -31,7 +31,7 @@ public class CashRegisterServiceImpl implements CashRegisterService {
     public void addCustomer(Customer customer) {
         var cashRegister = cashRegisters.stream()
                                         .min(Comparator.comparing(CashRegister::queueSize))
-                                        .orElseThrow(IllegalStateException::new); // fixme: change exception class
+                                        .orElseThrow(IllegalStateException::new);
         cashRegister.addCustomer(customer);
         publishNewCustomerInQueueEvent(customer, cashRegister);
         if (cashRegister.queueSize() == 1) {

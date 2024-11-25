@@ -8,7 +8,7 @@ import software.kosiv.pizzaflow.event.*;
 import software.kosiv.pizzaflow.mapper.EventDtoMapper;
 
 @Controller
-public class WebSocketEventController { // todo: write Event-DTO mappers
+public class WebSocketEventController {
     
     private SimpMessagingTemplate template;
     private EventDtoMapper mapper;

@@ -20,7 +20,7 @@ public class MenuServiceImpl implements MenuService {
     InputStream inputStream = getClass().getClassLoader().getResourceAsStream("menu.json");
     
     public MenuServiceImpl() {
-        List<PizzaMenuItem> items = null; // fixme: PizzaMenuItem -> MenuItem
+        List<PizzaMenuItem> items = null;
         try {
             items = objectMapper.readValue(inputStream, new TypeReference<>() {
             });

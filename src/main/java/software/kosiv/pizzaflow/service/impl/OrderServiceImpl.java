@@ -29,7 +29,7 @@ public class OrderServiceImpl implements OrderService {
     }
     
     @Scheduled(fixedDelay = 3, timeUnit = TimeUnit.SECONDS)
-    public void checkForCompletedOrders() { // fixme: maybe there is better way to handle completed orders
+    public void checkForCompletedOrders() {
         List<Order> completedOrders = new ArrayList<>();
         for (int i = 0, activeOrdersSize = activeOrders.size(); i < activeOrdersSize; i++) {
             Order order = activeOrders.get(i);
